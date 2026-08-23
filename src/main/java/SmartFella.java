@@ -1,33 +1,55 @@
 import java.util.Scanner;
 
 public class SmartFella {
+    /**
+     *  The SmartFella class runs a To-do list manager with an Interesting personality. The SmartFella class creates and tracks instances of the Task class.
+     * This is the main file which runs the program.
+    */
+    private static boolean isRunning = true;
+    private Task[] tasks = new Task[100];
+    private int nextFreeIndex = 0;
+    private final int WHICH_FELLA = (int)(Math.random() * 101) % 2;
 
-    private static boolean running = true;
-    private Task[] cmdList = new Task[100];
-    private int nextFreeIndex;
-
-    public SmartFella() { // init function
-        this.nextFreeIndex = 0;
-    }
-    
+    /**
+     * Prints a list of all previous non-keyword commands, which have been saved as part of the To-do list.
+     */
     public void getList() {
         char symbol;
         for (int i = 0; i < nextFreeIndex; i++) {
-            symbol = (cmdList[i].isDone()) ? 'x' : ' '; 
-            System.out.println(String.format("%d. [%c] %s", i+1, symbol, cmdList[i].getName()));
+            symbol = (tasks[i].isDone()) ? 'x' : ' '; 
+            System.out.println(String.format("%d. [%c] %s", 
+                i + 1,
+                symbol,
+                tasks[i].getName()));
         }
         System.out.println("");
     }
 
-    public void addToCmdList(String input) {
-        cmdList[nextFreeIndex] = new Task(input);
+    /**
+     * Adds a new item to the task list maintained by SmartFella.
+     * @param input
+     */
+    public void addToTasks(String input) {
+        tasks[nextFreeIndex] = new Task(input);
         nextFreeIndex++;
     }
 
-    public boolean match(String cmd, String keyword) {
-        return cmd.split(" ")[0].toLowerCase().equals(keyword);
+    /**
+     * Returns a boolean which shows whether the input contains the keyword. ie. "mark 10" contains "mark" -> TRUE
+     * @param input
+     * @param keyword
+     * @return
+     */
+    public boolean isMatching(String input, String keyword) {
+        return input.split(" ")[0]
+            .toLowerCase()
+            .equals(keyword);
     }
 
+    /**
+     * Takes the user input as param "cmd". If format of "cmd" is correct and within range, task at corresponding index will be marked as done/not done depending on "mark/unmark".
+     * @param cmd
+     */
     public void markDone(String cmd) {
         String[] data = cmd.split(" ");
         
@@ -41,20 +63,29 @@ public class SmartFella {
 
         // check if within range
         int index = Integer.parseInt(data[1]) - 1;
-        if (index >= nextFreeIndex || index < 0) {
+        if (index >= nextFreeIndex
+                || index < 0) {
             System.out.println(">> tHAT'S NOT A VALUE WE ACCEPT >:(\n");
             return;
         }
 
-        if (this.match(data[0], "mark")) {
-            System.out.println(">> mARKED " + Integer.toString(index + 1) + "! ! !\n");
-            cmdList[index].markDone();
+        //match with keyword & make change
+        if (this.isMatching(data[0], "mark")) {
+            System.out.println(">> mARKED "
+                + Integer.toString(index + 1)
+                + "! ! !\n");
+            tasks[index].markDone();
         } else {
-            System.out.println(">> uNMARKED " + Integer.toString(index + 1) + "! ! !\n");
-            cmdList[index].unmarkDone();
+            System.out.println(">> uNMARKED "
+                + Integer.toString(index + 1)
+                + "! ! !\n");
+            tasks[index].unmarkDone();
         }
     }
 
+    /**
+     * Receives user commands and executes corresponding actions.
+     */
     public void getInput() {
         // get input
         String input;
@@ -63,18 +94,27 @@ public class SmartFella {
         input = scanner.nextLine();
 
         // keyword matching
-        if (this.match(input, "bye")) {
-            running = false;
-        } else if (this.match(input, "list")){
+        if (this.isMatching(input, "bye")) {
+            isRunning = false;
+
+        } else if (this.isMatching(input, "list")){
             this.getList();
-        } else if (this.match(input, "mark") || this.match(input, "unmark")) {
+
+        } else if (this.isMatching(input, "mark")
+                || this.isMatching(input, "unmark")) {
             this.markDone(input);
+
         } else {
-            this.addToCmdList(input);
-            System.out.println(">> aDDING \"" + input.toUpperCase() + "\"\n");
+            this.addToTasks(input);
+            System.out.println(">> aDDING \""
+                + input.toUpperCase()
+                + "\"\n");
         }
     }
 
+    /**
+     * Prints a very very large ASCII image of a very welcoming fella. Which fella it is depends on the constant WHICH_FELLA which is randomised upon initialisation of the SmartFella object.
+     */
     public void summonFella() {
         String SmartFella = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
@@ -158,27 +198,33 @@ public class SmartFella {
             "====----====---=****###***++++==+*%%%%%%###********+++++++***#***+=:.. \n"+
             "====----=++====-=+*++####***+++++*#%%%%%%###******++++***##%%%%%%%#*=:.\n";
 
-        switch ((int)(Math.random()*101)%2) {
-            case 0: System.out.println(SmartFella);
+        switch (WHICH_FELLA) {
+            case 0:
+                System.out.println(SmartFella);
                 break;
-            case 1: System.out.println(FartSmella);
+            case 1:
+                System.out.println(FartSmella);
                 break;
         }
 
     }
 
+    /**
+     * Start the program.
+     */
     public void main(String[] args) {
-        //main flow of program
+        // greet
         summonFella();
-
         String greet =  ">> bEHOLD, A sMART fELLA ! ! !\n" + //
                         ">> i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n";
         System.out.println(greet);
 
-        while (running) {
+        // main process
+        while (isRunning) {
             this.getInput();
         }
 
+        // end
         String goodbye = ">> fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n";
         System.out.println(goodbye);
     }

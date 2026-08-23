@@ -1,6 +1,9 @@
 public class Task {
-    String name;
-    boolean done;
+    /**
+     * The Task class is used for SmartFella to track tasks.
+     */
+    private String name;
+    private boolean done;
     
     public Task(String name) {
         this.name = name;
