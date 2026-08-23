@@ -1,4 +1,20 @@
+import java.util.Scanner;
+
 public class SmartFella {
+
+    private static boolean running = true;
+
+    public static void get_input() {
+        String input;
+        Scanner scanner = new Scanner(System.in);
+        System.out.print(">>> "); // your inputs will be denoted by triple ">>>"
+        input = scanner.nextLine();
+        if (input.toLowerCase().equals("bye")) {
+            running = false;
+        } else {
+            System.out.println(">> " + input.toUpperCase() + "\n");
+        }
+    }
     public static void main(String[] args) {
         String SmartFella = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
@@ -94,6 +110,11 @@ public class SmartFella {
         }
         
         System.out.println(greet);
+
+        while (running) {
+            get_input();
+        }
+
         System.out.println(goodbye);
     }
 }
