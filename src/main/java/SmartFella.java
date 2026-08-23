@@ -3,40 +3,79 @@ import java.util.Scanner;
 public class SmartFella {
 
     private static boolean running = true;
-    private String[] cmdList = new String[100];
+    private Task[] cmdList = new Task[100];
     private int nextFreeIndex;
 
     public SmartFella() { // init function
         this.nextFreeIndex = 0;
     }
-
+    
     public void getList() {
+        char symbol;
         for (int i = 0; i < nextFreeIndex; i++) {
-            System.out.println(Integer.toString(i+1) + ". " + cmdList[i]);
+            symbol = (cmdList[i].isDone()) ? 'x' : ' '; 
+            System.out.println(String.format("%d. [%c] %s", i+1, symbol, cmdList[i].getName()));
         }
         System.out.println("");
     }
 
     public void addToCmdList(String input) {
-        cmdList[nextFreeIndex] = input;
+        cmdList[nextFreeIndex] = new Task(input);
         nextFreeIndex++;
     }
 
-    public void getInput() {
-        String input;
-        Scanner scanner = new Scanner(System.in);
-        System.out.print(">>> "); // your inputs will be denoted by triple ">>>"
-        input = scanner.nextLine();
-        if (input.toLowerCase().equals("bye")) {
-            running = false;
-        } else if (input.toLowerCase().equals("list")){
-            this.getList();
+    public boolean match(String cmd, String keyword) {
+        return cmd.split(" ")[0].toLowerCase().equals(keyword);
+    }
+
+    public void markDone(String cmd) {
+        String[] data = cmd.split(" ");
+        
+        // check if is integer
+        try {
+            Integer.parseInt(data[1]);
+        } catch (NumberFormatException e) {
+            System.out.println(">> tHAT'S NOT A NUMBER! ! ! tRY AGAIN\n");
+            return;
+        }
+
+        // check if within range
+        int index = Integer.parseInt(data[1]) - 1;
+        if (index >= nextFreeIndex || index < 0) {
+            System.out.println(">> tHAT'S NOT A VALUE WE ACCEPT >:(\n");
+            return;
+        }
+
+        if (this.match(data[0], "mark")) {
+            System.out.println(">> mARKED " + Integer.toString(index + 1) + "! ! !\n");
+            cmdList[index].markDone();
         } else {
-            this.addToCmdList(input);
-            System.out.println(">> " + input.toUpperCase() + "\n");
+            System.out.println(">> uNMARKED " + Integer.toString(index + 1) + "! ! !\n");
+            cmdList[index].unmarkDone();
         }
     }
-    public void main(String[] args) {
+
+    public void getInput() {
+        // get input
+        String input;
+        Scanner scanner = new Scanner(System.in); //should be closed at some point?
+        System.out.print(">>> "); // your inputs will be denoted by triple ">>>"
+        input = scanner.nextLine();
+
+        // keyword matching
+        if (this.match(input, "bye")) {
+            running = false;
+        } else if (this.match(input, "list")){
+            this.getList();
+        } else if (this.match(input, "mark") || this.match(input, "unmark")) {
+            this.markDone(input);
+        } else {
+            this.addToCmdList(input);
+            System.out.println(">> aDDING \"" + input.toUpperCase() + "\"\n");
+        }
+    }
+
+    public void summonFella() {
         String SmartFella = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
             "              ---------.                         :-------.              \n"+
@@ -119,23 +158,28 @@ public class SmartFella {
             "====----====---=****###***++++==+*%%%%%%###********+++++++***#***+=:.. \n"+
             "====----=++====-=+*++####***+++++*#%%%%%%###******++++***##%%%%%%%#*=:.\n";
 
-        String greet =  ">> bEHOLD, A sMART fELLA ! ! !\n" + //
-                        ">> i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n";
-        String goodbye = ">> fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n";
-
         switch ((int)(Math.random()*101)%2) {
             case 0: System.out.println(SmartFella);
                 break;
             case 1: System.out.println(FartSmella);
                 break;
         }
-        
+
+    }
+
+    public void main(String[] args) {
+        //main flow of program
+        summonFella();
+
+        String greet =  ">> bEHOLD, A sMART fELLA ! ! !\n" + //
+                        ">> i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n";
         System.out.println(greet);
 
         while (running) {
             this.getInput();
         }
 
+        String goodbye = ">> fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n";
         System.out.println(goodbye);
     }
 }
