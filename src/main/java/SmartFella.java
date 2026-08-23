@@ -3,19 +3,40 @@ import java.util.Scanner;
 public class SmartFella {
 
     private static boolean running = true;
+    private String[] cmdList = new String[100];
+    private int nextFreeIndex;
 
-    public static void get_input() {
+    public SmartFella() { // init function
+        this.nextFreeIndex = 0;
+    }
+
+    public void getList() {
+        for (int i = 0; i < nextFreeIndex; i++) {
+            System.out.println(Integer.toString(i+1) + ". " + cmdList[i]);
+        }
+        System.out.println("");
+    }
+
+    public void addToCmdList(String input) {
+        cmdList[nextFreeIndex] = input;
+        nextFreeIndex++;
+    }
+
+    public void getInput() {
         String input;
         Scanner scanner = new Scanner(System.in);
         System.out.print(">>> "); // your inputs will be denoted by triple ">>>"
         input = scanner.nextLine();
         if (input.toLowerCase().equals("bye")) {
             running = false;
+        } else if (input.toLowerCase().equals("list")){
+            this.getList();
         } else {
+            this.addToCmdList(input);
             System.out.println(">> " + input.toUpperCase() + "\n");
         }
     }
-    public static void main(String[] args) {
+    public void main(String[] args) {
         String SmartFella = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
             "              ---------.                         :-------.              \n"+
@@ -112,7 +133,7 @@ public class SmartFella {
         System.out.println(greet);
 
         while (running) {
-            get_input();
+            this.getInput();
         }
 
         System.out.println(goodbye);
