@@ -77,7 +77,7 @@ public class SmartFella {
      */
     public void getInput() {
         String input;
-        
+
         Scanner scanner = new Scanner(System.in); //should be closed at some point?
         System.out.print(">>> "); // your inputs will be denoted by triple ">>>"
         input = scanner.nextLine();
@@ -139,6 +139,15 @@ public class SmartFella {
 
         tasks[nextFreeIndex] = new Todo(description);
         nextFreeIndex++;
+
+        printSuccessMessage();
+    }
+
+    private void printSuccessMessage() {
+        //print result
+        System.out.println(">> " + tasks[nextFreeIndex-1].toString());
+        System.out.println(">> nOW YOU HAVE " + nextFreeIndex + " TASKS IN THE LIST ! ! !");
+        System.out.println();
     }
 
     /**
@@ -173,6 +182,8 @@ public class SmartFella {
 
         tasks[nextFreeIndex] = new Deadline(text, deadline);
         nextFreeIndex++;
+
+        printSuccessMessage();
     }
 
     /**
@@ -210,6 +221,8 @@ public class SmartFella {
         //add
         tasks[nextFreeIndex] = new Event(text, from, to);
         nextFreeIndex++;
+
+        printSuccessMessage();
     }
 
     /**
