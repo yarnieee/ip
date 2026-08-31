@@ -13,6 +13,9 @@ public class Deadline extends Todo {
 
     /**
      * String method
+     * [D][X] this is the deadline (by: time)
+     * D to denote class Deadline
+     * X to denote task is marked done
      */
     public String toString() {
         super.toString();

@@ -76,7 +76,8 @@ public class SmartFella {
      * Receives user commands and executes corresponding actions.
      */
     public void getInput() {
-        isValidTodo();
+        String input;
+        
         Scanner scanner = new Scanner(System.in); //should be closed at some point?
         System.out.print(">>> "); // your inputs will be denoted by triple ">>>"
         input = scanner.nextLine();
@@ -120,27 +121,17 @@ public class SmartFella {
     }
 
     /**
-     * Adds a new item to the task list maintained by SmartFella.
+     * Add Todo item into list
      * @param input
      */
-    // public void addToTasks(String input) {
-    //     tasks[nextFreeIndex] = new Task(input);
-    //     nextFreeIndex++;
-    // }
-
     private void addTodo(String input) {
         String description;
 
         // check if input is valid
-        if (!isValidTodo()) {
+        if (!isValidTodo(input)) {
             System.out.println(">> iNVALID TODO !");
             return;
         }
-        // if (input.length() < TODO_KEYWORD
-
-        // if (input.startsWith(TODO_KEYWORD)) {
-        //     text = text.substring(prefix.length());
-        // }
 
         //add todo
         description = input.substring(TODO_KEYWORD.length())
@@ -150,17 +141,25 @@ public class SmartFella {
         nextFreeIndex++;
     }
 
-    private boolean isValidTodo() {
+    /**
+     * Returns true if input matches intended todo format, false otherwise
+     * @return
+     */
+    private boolean isValidTodo(String input) {
         // TODO: implement todo validation
         return true;
     }
 
+    /**
+     * Add deadline item into list
+     * @param input
+     */
     private void addDeadline(String input) {
         String[] description;
         String text, deadline;
 
         //check if valid
-        if (!isValidDeadline()) {
+        if (!isValidDeadline(input)) {
             System.out.println(">> iNVALID DEADLINE !");
             return;
         }
@@ -176,17 +175,25 @@ public class SmartFella {
         nextFreeIndex++;
     }
 
-    private boolean isValidDeadline() {
+    /**
+     * Returns true if input matches intended deadline format, false otherwise
+     * @return
+     */
+    private boolean isValidDeadline(String input) {
         // TODO: implement deadline validation
         return true;
     }
 
+    /**
+     * Add event item into list
+     * @param input
+     */
     private void addEvent(String input) {
         String[] description;
         String text, from, to;
 
         //check if valid
-        if (!isValidDeadline()) {
+        if (!isValidEvent(input)) {
             System.out.println(">> iNVALID EVENT !");
             return;
         }
@@ -205,7 +212,11 @@ public class SmartFella {
         nextFreeIndex++;
     }
 
-    private boolean isValidEvent() {
+    /**
+     * Returns true if input matches intended event format, false otherwise
+     * @return
+     */
+    private boolean isValidEvent(String input) {
         // TODO: implement event validation
         return true;
     }    

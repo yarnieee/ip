@@ -13,6 +13,9 @@ public class Event extends Task {
 
     /**
      * String method
+     * [E][X] this is the event (from: time to: timetime)
+     * E to denote class Event
+     * X to denote task is marked done
      */
     public String toString() {
         super.toString();

@@ -14,7 +14,10 @@ public class Task {
     }
 
     /**
-     * String method
+     * String method to print in the following format: (example)
+     * [ ][X] this is the task
+     * blank to denote superclass Task
+     * X to denote task is marked done
      */
     public String toString() {
         char isDone = (this.isDone()) ? 'X' : ' ';

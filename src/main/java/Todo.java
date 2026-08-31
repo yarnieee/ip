@@ -10,7 +10,10 @@ public class Todo extends Task {
     }
 
     /**
-     * String method uses parent class one
+     * String method uses parent class toString(), where getIdentifier() is overridden into the Todo version.
+     * [T][X] this is the todo
+     * T to denote class todo
+     * X to denote task is marked done
      */
 
     /**
