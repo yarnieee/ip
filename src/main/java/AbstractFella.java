@@ -54,6 +54,7 @@ public abstract class AbstractFella {
      */
     public void printSuccessMessage() {
         //print result
+        System.out.println(">> aDDED INTO LIST !");
         System.out.println(">> " + tasks[nextFreeIndex-1].toString());
         System.out.println(">> nOW YOU HAVE " + nextFreeIndex + " TASKS IN THE LIST ! ! !");
         System.out.println();
@@ -90,15 +91,12 @@ public abstract class AbstractFella {
             markDone(input);
 
         } else if (input.startsWith(TODO_KEYWORD)){
-            System.out.println(">> aDDED TODO !");
             addTodo(input);
 
         } else if (input.startsWith(DEADLINE_KEYWORD)){
-            System.out.println(">> aDDED DEADLINE !");
             addDeadline(input);
 
         } else if (input.startsWith(EVENT_KEYWORD)){
-            System.out.println(">> aDDED EVENT !");
             addEvent(input);
 
         } else {
@@ -127,24 +125,14 @@ public abstract class AbstractFella {
      * @param cmd
      */
     private void markDone(String cmd) {
+        // check if input is valid
+        if (!isValidMarkDone(cmd)) {
+            return;
+        }
+
         String[] data = cmd.split(" ");
-        
-        // check if is integer
-        try {
-            Integer.parseInt(data[1]);
-        } catch (NumberFormatException e) {
-            System.out.println(INVALID_NUMBER_STRING);
-            return;
-        }
-
-        // check if within range
         int index = Integer.parseInt(data[1]) - 1;
-        if (index >= nextFreeIndex
-                || index < 0) {
-            System.out.println(INVALID_VALUE_STRING);
-            return;
-        }
-
+        
         //match with keyword & make change
         if (data[0].startsWith(MARK_KEYWORD)) {
             System.out.println(">> mARKED "
@@ -159,6 +147,31 @@ public abstract class AbstractFella {
         }
     }
 
+    /**
+     * Returns true if input matches intended mark done format, false otherwise
+     * @return
+     */
+    private boolean isValidMarkDone(String input) {
+        String[] data = input.split(" ");
+        
+        // check if is integer
+        try {
+            Integer.parseInt(data[1]);
+        } catch (NumberFormatException e) {
+            System.out.println(INVALID_NUMBER_STRING);
+            return false;
+        }
+
+        // check if within range
+        int index = Integer.parseInt(data[1]) - 1;
+        if (index >= nextFreeIndex
+                || index < 0) {
+            System.out.println(INVALID_VALUE_STRING);
+            return false;
+        }
+
+        return true;
+    }
     // ============================================== ADD/VALIDATE ITEMS ============================================================
     /**
      * Add Todo item into list
@@ -169,7 +182,7 @@ public abstract class AbstractFella {
 
         // check if input is valid
         if (!isValidTodo(input)) {
-            System.out.println(">> iNVALID TODO !");
+            System.out.println(">> iNVALID TODO !\n");
             return;
         }
 
@@ -188,7 +201,18 @@ public abstract class AbstractFella {
      * @return
      */
     private boolean isValidTodo(String input) {
-        // TODO: implement todo validation
+        //check that TODO_KEYWORD is proceeded by a space
+        //and that there exists content after the space
+        boolean hasLength = (input.length() > TODO_KEYWORD.length()+1);
+        if (!hasLength) {
+            return false;
+        }
+
+        boolean hasSpace = (input.charAt(TODO_KEYWORD.length())==' ');
+        if (!hasSpace) {
+            return false;
+        }
+
         return true;
     }
 
@@ -224,7 +248,34 @@ public abstract class AbstractFella {
      * @return
      */
     private boolean isValidDeadline(String input) {
-        // TODO: implement deadline validation
+        //check that DEADLINE_KEYWORD is proceeded by a space
+        //and that there exists content after the space
+        boolean hasLength = (input.length() > DEADLINE_KEYWORD.length()+1);
+        if (!hasLength) {
+            return false;
+        }
+
+        boolean hasSpace = (input.charAt(DEADLINE_KEYWORD.length())==' ');
+        if (!hasSpace) {
+            return false;
+        }
+
+        //check that DEADLINE_DELIM exists and that after splitting all substrings are non-empty
+        String[] description;
+
+        description = input.substring(DEADLINE_KEYWORD.length())
+                            .strip()
+                            .split(DEADLINE_DELIM);
+
+        if (description.length != 2) {
+            return false;
+        }
+
+        if (description[0].strip().isEmpty()
+            || description[1].strip().isEmpty()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -264,6 +315,34 @@ public abstract class AbstractFella {
      */
     private boolean isValidEvent(String input) {
         // TODO: implement event validation
+        //check that EVENT_KEYWORD is proceeded by a space
+        //and that there exists content after the space
+        boolean hasLength = (input.length() > EVENT_KEYWORD.length()+1);
+        if (!hasLength) {
+            return false;
+        }
+
+        boolean hasSpace = (input.charAt(EVENT_KEYWORD.length())==' ');
+        if (!hasSpace) {
+            return false;
+        }
+
+        String[] description;
+        description = input.substring(EVENT_KEYWORD.length())
+                            .strip()
+                            .split(EVENT_START_DELIM + "|" + EVENT_END_DELIM);
+
+        if (description.length != 3) {
+            return false;
+        }
+
+        if (description[0].strip().isEmpty()
+            || description[1].strip().isEmpty()
+            || description[2].strip().isEmpty()) {
+            return false;
+        }
+
+
         return true;
     }    
 
@@ -271,7 +350,7 @@ public abstract class AbstractFella {
     /**
      * Start the program.
      */
-    public void main() {
+    public void run() {
         printFella();
         printGreeting();
 
