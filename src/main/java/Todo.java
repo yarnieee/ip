@@ -1,12 +1,9 @@
 public class Todo extends Task {
-    protected boolean isDone;
-
     /**
      * Init method
      */
     public Todo(String description) {
         super(description);
-        isDone = false;
     }
 
     /**
@@ -23,14 +20,4 @@ public class Todo extends Task {
         return 'T';
     }
 
-    /**
-     * Getter and setter methods
-     */
-    public boolean isDone() {
-        return isDone;
-    }
-
-    public void setDone(boolean isDone) {
-        this.isDone = isDone;
-    }
 }

@@ -3,14 +3,14 @@ public abstract class Task {
      * The Task class is used for SmartFella to track tasks.
      */
     private String name;
-    private boolean done;
+    private boolean isDone;
     
     /**
      * Init method
      */
     public Task(String name) {
         this.name = name;
-        this.done = false;
+        this.isDone = false;
     }
 
     /**
@@ -43,14 +43,14 @@ public abstract class Task {
     }
 
     public boolean isDone() {
-        return done;
+        return isDone;
     }
 
     public void markDone() {
-        this.done = true;
+        this.isDone = true;
     }
 
     public void unmarkDone() {
-        this.done = false;
+        this.isDone = false;
     }
 }
