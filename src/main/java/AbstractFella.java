@@ -1,11 +1,10 @@
 import java.util.Scanner;
 
+/**
+ *  The AbstractFella class runs a To-do list manager with an Interesting personality. The ___Fella class creates and tracks instances of the Task class.
+ * This is the main file which runs the program.
+*/
 public abstract class AbstractFella {
-    /**
-     *  The SmartFella class runs a To-do list manager with an Interesting personality. The SmartFella class creates and tracks instances of the Task class.
-     * This is the main file which runs the program.
-    */
-
     // ============================================== VARIABLES ============================================================
     /**
      * Constants

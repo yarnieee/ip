@@ -21,7 +21,7 @@ public abstract class Task {
      */
     public String toString() {
         char isDone = (this.isDone()) ? 'X' : ' ';
-        return String.format( "[%c][%c] %s", this.getIdentifier(), isDone, this.getName());
+        return String.format("[%c][%c] %s", this.getIdentifier(), isDone, this.getName());
     }
 
     /**
