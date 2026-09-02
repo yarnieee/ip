@@ -1,4 +1,4 @@
-public class Task {
+public abstract class Task {
     /**
      * The Task class is used for SmartFella to track tasks.
      */
