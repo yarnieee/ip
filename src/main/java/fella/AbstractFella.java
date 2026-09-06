@@ -2,6 +2,13 @@ package fella;
 
 import java.util.Scanner;
 
+import error.EmptyArgumentException;
+import error.IncorrectArgumentCountException;
+import error.IncorrectArgumentFormatException;
+import error.InvalidRangeException;
+import error.TaskAlreadyMarkedException;
+import error.TaskAlreadyUnmarkedException;
+import error.TooFewArgumentsException;
 import task.Deadline;
 import task.Event;
 import task.Task;
@@ -30,8 +37,19 @@ public abstract class AbstractFella {
     final String EVENT_END_DELIM = "/to";
 
     final String INCORRECT_COMMAND_STRING = ">> cOMMAND nOT rECOGNISED ! ! !\n";
-    final String INVALID_VALUE_STRING = ">> tHAT'S NOT A VALUE WE ACCEPT >:(\n";
-    final String INVALID_NUMBER_STRING = ">> tHAT'S NOT A NUMBER! ! ! tRY AGAIN\n";
+    final String INVALID_VALUE_STRING = ">> tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
+    final String MISSING_TASK_NUMBER_STRING = ">> tELL ME WHICH TASK TO MARK OR UNMARK ! ! !\n";
+    final String INVALID_NUMBER_STRING = ">> tHAT TASK NUMBER IS NOT A NUMBER ! ! !\n";
+    final String ALREADY_MARKED_STRING = ">> tHAT TASK IS ALREADY MARKED ! ! !\n";
+    final String ALREADY_UNMARKED_STRING = ">> tHAT TASK IS ALREADY UNMARKED ! ! !\n";
+    final String TODO_FORMAT_ERROR_STRING = ">> tODO NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    final String TODO_EMPTY_ERROR_STRING = ">> tODO DESCRIPTION CANNOT BE EMPTY ! ! !\n";
+    final String DEADLINE_FORMAT_ERROR_STRING = ">> dEADLINE NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    final String DEADLINE_COUNT_ERROR_STRING = ">> dEADLINE NEEDS A DESCRIPTION AND ONE /by DATE ! ! !\n";
+    final String DEADLINE_EMPTY_ERROR_STRING = ">> dEADLINE DESCRIPTION AND DATE CANNOT BE EMPTY ! ! !\n";
+    final String EVENT_FORMAT_ERROR_STRING = ">> eVENT NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    final String EVENT_COUNT_ERROR_STRING = ">> eVENT NEEDS A DESCRIPTION, ONE /from, AND ONE /to ! ! !\n";
+    final String EVENT_EMPTY_ERROR_STRING = ">> eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
 
     /**
      * Tracking variables
@@ -132,8 +150,22 @@ public abstract class AbstractFella {
      * @param cmd
      */
     private void markDone(String cmd) {
-        // check if input is valid
-        if (!isValidMarkDone(cmd)) {
+        try {
+            isValidMarkDone(cmd);
+        } catch (TooFewArgumentsException e) {
+            System.out.println(MISSING_TASK_NUMBER_STRING);
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println(INVALID_NUMBER_STRING);
+            return;
+        } catch (InvalidRangeException e) {
+            System.out.println(INVALID_VALUE_STRING);
+            return;
+        } catch (TaskAlreadyMarkedException e) {
+            System.out.println(ALREADY_MARKED_STRING);
+            return;
+        } catch (TaskAlreadyUnmarkedException e) {
+            System.out.println(ALREADY_UNMARKED_STRING);
             return;
         }
 
@@ -155,29 +187,43 @@ public abstract class AbstractFella {
     }
 
     /**
-     * Returns true if input matches intended mark done format, false otherwise
-     * @return
+     * Validates that a mark or unmark command contains an existing task number.
+     *
+     * @throws TooFewArgumentsException if the task number is missing
+     * @throws NumberFormatException if the task number is not an integer
+     * @throws InvalidRangeException if the task number is outside the task list
+     * @throws TaskAlreadyMarkedException if an already marked task is marked again
+     * @throws TaskAlreadyUnmarkedException if an already unmarked task is unmarked again
      */
-    private boolean isValidMarkDone(String input) {
+    private void isValidMarkDone(String input)
+            throws TooFewArgumentsException, InvalidRangeException, TaskAlreadyMarkedException,
+            TaskAlreadyUnmarkedException {
         String[] data = input.split(" ");
-        
-        // check if is integer
+
+        if (data.length < 2) {
+            throw new TooFewArgumentsException();
+        }
+
         try {
             Integer.parseInt(data[1]);
         } catch (NumberFormatException e) {
-            System.out.println(INVALID_NUMBER_STRING);
-            return false;
+            throw new NumberFormatException();
         }
 
         // check if within range
         int index = Integer.parseInt(data[1]) - 1;
         if (index >= nextFreeIndex
                 || index < 0) {
-            System.out.println(INVALID_VALUE_STRING);
-            return false;
+            throw new InvalidRangeException();
         }
 
-        return true;
+        if (data[0].startsWith(MARK_KEYWORD) && tasks[index].isDone()) {
+            throw new TaskAlreadyMarkedException();
+        }
+
+        if (data[0].startsWith(UNMARK_KEYWORD) && !tasks[index].isDone()) {
+            throw new TaskAlreadyUnmarkedException();
+        }
     }
     // ============================================== ADD/VALIDATE ITEMS ============================================================
     /**
@@ -187,9 +233,13 @@ public abstract class AbstractFella {
     private void addTodo(String input) {
         String description;
 
-        // check if input is valid
-        if (!isValidTodo(input)) {
-            System.out.println(">> iNVALID TODO !\n");
+        try {
+            isValidTodo(input);
+        } catch (IncorrectArgumentFormatException e) {
+            System.out.println(TODO_FORMAT_ERROR_STRING);
+            return;
+        } catch (EmptyArgumentException e) {
+            System.out.println(TODO_EMPTY_ERROR_STRING);
             return;
         }
 
@@ -204,23 +254,28 @@ public abstract class AbstractFella {
     }
 
     /**
-     * Returns true if input matches intended todo format, false otherwise
-     * @return
+     * Validates the format of a todo command.
+     *
+     * @throws IncorrectArgumentFormatException if no space follows the command keyword
+     * @throws EmptyArgumentException if the description is missing
      */
-    private boolean isValidTodo(String input) {
+    private void isValidTodo(String input)
+            throws IncorrectArgumentFormatException, EmptyArgumentException {
         //check that TODO_KEYWORD is proceeded by a space
         //and that there exists content after the space
         boolean hasLength = (input.length() > TODO_KEYWORD.length()+1);
         if (!hasLength) {
-            return false;
+            throw new EmptyArgumentException();
         }
 
         boolean hasSpace = (input.charAt(TODO_KEYWORD.length())==' ');
         if (!hasSpace) {
-            return false;
+            throw new IncorrectArgumentFormatException();
         }
 
-        return true;
+        if (input.substring(TODO_KEYWORD.length()).strip().isEmpty()) {
+            throw new EmptyArgumentException();
+        }
     }
 
     /**
@@ -231,16 +286,23 @@ public abstract class AbstractFella {
         String[] description;
         String text, deadline;
 
-        //check if valid
-        if (!isValidDeadline(input)) {
-            System.out.println(">> iNVALID DEADLINE !");
+        try {
+            isValidDeadline(input);
+        } catch (IncorrectArgumentFormatException e) {
+            System.out.println(DEADLINE_FORMAT_ERROR_STRING);
+            return;
+        } catch (IncorrectArgumentCountException e) {
+            System.out.println(DEADLINE_COUNT_ERROR_STRING);
+            return;
+        } catch (EmptyArgumentException e) {
+            System.out.println(DEADLINE_EMPTY_ERROR_STRING);
             return;
         }
 
         //add
         description = input.substring(DEADLINE_KEYWORD.length())
                             .strip()
-                            .split(DEADLINE_DELIM);
+                            .split(DEADLINE_DELIM, -1);
         text = description[0].strip();
         deadline = description[1].strip();
 
@@ -251,20 +313,24 @@ public abstract class AbstractFella {
     }
 
     /**
-     * Returns true if input matches intended deadline format, false otherwise
-     * @return
+     * Validates the format of a deadline command.
+     *
+     * @throws IncorrectArgumentFormatException if no space follows the command keyword
+     * @throws IncorrectArgumentCountException if there is not exactly one {@code /by} delimiter
+     * @throws EmptyArgumentException if the description or deadline is empty
      */
-    private boolean isValidDeadline(String input) {
+    private void isValidDeadline(String input) throws IncorrectArgumentFormatException,
+            IncorrectArgumentCountException, EmptyArgumentException {
         //check that DEADLINE_KEYWORD is proceeded by a space
         //and that there exists content after the space
         boolean hasLength = (input.length() > DEADLINE_KEYWORD.length()+1);
         if (!hasLength) {
-            return false;
+            throw new EmptyArgumentException();
         }
 
         boolean hasSpace = (input.charAt(DEADLINE_KEYWORD.length())==' ');
         if (!hasSpace) {
-            return false;
+            throw new IncorrectArgumentFormatException();
         }
 
         //check that DEADLINE_DELIM exists and that after splitting all substrings are non-empty
@@ -272,18 +338,16 @@ public abstract class AbstractFella {
 
         description = input.substring(DEADLINE_KEYWORD.length())
                             .strip()
-                            .split(DEADLINE_DELIM);
+                            .split(DEADLINE_DELIM, -1);
 
         if (description.length != 2) {
-            return false;
+            throw new IncorrectArgumentCountException();
         }
 
         if (description[0].strip().isEmpty()
             || description[1].strip().isEmpty()) {
-            return false;
+            throw new EmptyArgumentException();
         }
-
-        return true;
     }
 
     /**
@@ -294,16 +358,23 @@ public abstract class AbstractFella {
         String[] description;
         String text, from, to;
 
-        //check if valid
-        if (!isValidEvent(input)) {
-            System.out.println(">> iNVALID EVENT !");
+        try {
+            isValidEvent(input);
+        } catch (IncorrectArgumentFormatException e) {
+            System.out.println(EVENT_FORMAT_ERROR_STRING);
+            return;
+        } catch (IncorrectArgumentCountException e) {
+            System.out.println(EVENT_COUNT_ERROR_STRING);
+            return;
+        } catch (EmptyArgumentException e) {
+            System.out.println(EVENT_EMPTY_ERROR_STRING);
             return;
         }
 
         //add
         description = input.substring(EVENT_KEYWORD.length())
                             .strip()
-                            .split(EVENT_START_DELIM + "|" + EVENT_END_DELIM);
+                            .split(EVENT_START_DELIM + "|" + EVENT_END_DELIM, -1);
 
         text = description[0].strip();
         from = description[1].strip();
@@ -317,40 +388,40 @@ public abstract class AbstractFella {
     }
 
     /**
-     * Returns true if input matches intended event format, false otherwise
-     * @return
+     * Validates the format of an event command.
+     *
+     * @throws IncorrectArgumentFormatException if no space follows the command keyword
+     * @throws IncorrectArgumentCountException if there are not exactly two time delimiters
+     * @throws EmptyArgumentException if the description, start, or end time is empty
      */
-    private boolean isValidEvent(String input) {
-        // TODO: implement event validation
+    private void isValidEvent(String input) throws IncorrectArgumentFormatException,
+            IncorrectArgumentCountException, EmptyArgumentException {
         //check that EVENT_KEYWORD is proceeded by a space
         //and that there exists content after the space
         boolean hasLength = (input.length() > EVENT_KEYWORD.length()+1);
         if (!hasLength) {
-            return false;
+            throw new EmptyArgumentException();
         }
 
         boolean hasSpace = (input.charAt(EVENT_KEYWORD.length())==' ');
         if (!hasSpace) {
-            return false;
+            throw new IncorrectArgumentFormatException();
         }
 
         String[] description;
         description = input.substring(EVENT_KEYWORD.length())
                             .strip()
-                            .split(EVENT_START_DELIM + "|" + EVENT_END_DELIM);
+                            .split(EVENT_START_DELIM + "|" + EVENT_END_DELIM, -1);
 
         if (description.length != 3) {
-            return false;
+            throw new IncorrectArgumentCountException();
         }
 
         if (description[0].strip().isEmpty()
             || description[1].strip().isEmpty()
             || description[2].strip().isEmpty()) {
-            return false;
+            throw new EmptyArgumentException();
         }
-
-
-        return true;
     }    
 
     // ============================================== MAIN FUNCTION ============================================================
