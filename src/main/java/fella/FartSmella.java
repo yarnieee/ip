@@ -1,3 +1,5 @@
+package fella;
+
 public class FartSmella extends AbstractFella {
     @Override
     public void printFella() {

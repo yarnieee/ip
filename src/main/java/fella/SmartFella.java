@@ -1,3 +1,5 @@
+package fella;
+
 public class SmartFella extends AbstractFella {
 
     @Override

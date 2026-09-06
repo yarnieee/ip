@@ -1,3 +1,7 @@
+import fella.AbstractFella;
+import fella.FartSmella;
+import fella.SmartFella;
+
 public class Main {
     private AbstractFella fella;
 

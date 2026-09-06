@@ -1,5 +1,8 @@
+package task;
+
 public abstract class Task {
-    /**
+
+/**
      * The Task class is used for SmartFella to track tasks.
      */
     private String name;
