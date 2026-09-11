@@ -1,5 +1,6 @@
 package fella;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import error.EmptyArgumentException;
@@ -55,7 +56,7 @@ public abstract class AbstractFella {
      * Tracking variables
      */
     static boolean isRunning = true;
-    Task[] tasks = new Task[100];
+    ArrayList<Task> tasks = new ArrayList<>();
     int nextFreeIndex = 0;
 
     // ============================================== PRINT MESSAGES ============================================================
@@ -80,7 +81,7 @@ public abstract class AbstractFella {
     public void printSuccessMessage() {
         //print result
         System.out.println(">> aDDED INTO LIST !");
-        System.out.println(">> " + tasks[nextFreeIndex-1].toString());
+        System.out.println(">> " + tasks.get(nextFreeIndex-1).toString());
         System.out.println(">> nOW YOU HAVE " + nextFreeIndex + " TASKS IN THE LIST ! ! !");
         System.out.println();
     }
@@ -140,7 +141,7 @@ public abstract class AbstractFella {
 
             System.out.println(String.format("%d. %s", 
                 listCounter,
-                tasks[i].toString()));
+                tasks.get(i).toString()));
         }
         System.out.println("");
     }
@@ -177,12 +178,12 @@ public abstract class AbstractFella {
             System.out.println(">> mARKED "
                 + Integer.toString(index + 1)
                 + "! ! !\n");
-            tasks[index].markDone();
+            tasks.get(index).markDone();
         } else {
             System.out.println(">> uNMARKED "
                 + Integer.toString(index + 1)
                 + "! ! !\n");
-            tasks[index].unmarkDone();
+            tasks.get(index).unmarkDone();
         }
     }
 
@@ -217,11 +218,11 @@ public abstract class AbstractFella {
             throw new InvalidRangeException();
         }
 
-        if (data[0].startsWith(MARK_KEYWORD) && tasks[index].isDone()) {
+        if (data[0].startsWith(MARK_KEYWORD) && tasks.get(index).isDone()) {
             throw new TaskAlreadyMarkedException();
         }
 
-        if (data[0].startsWith(UNMARK_KEYWORD) && !tasks[index].isDone()) {
+        if (data[0].startsWith(UNMARK_KEYWORD) && !tasks.get(index).isDone()) {
             throw new TaskAlreadyUnmarkedException();
         }
     }
@@ -246,8 +247,7 @@ public abstract class AbstractFella {
         //add todo
         description = input.substring(TODO_KEYWORD.length())
                             .strip();
-
-        tasks[nextFreeIndex] = new Todo(description);
+        tasks.add(new Todo(description));
         nextFreeIndex++;
 
         printSuccessMessage();
@@ -305,8 +305,8 @@ public abstract class AbstractFella {
                             .split(DEADLINE_DELIM, -1);
         text = description[0].strip();
         deadline = description[1].strip();
-
-        tasks[nextFreeIndex] = new Deadline(text, deadline);
+        
+        tasks.add(new Deadline(text, deadline));
         nextFreeIndex++;
 
         printSuccessMessage();
@@ -381,7 +381,7 @@ public abstract class AbstractFella {
         to = description[2].strip();
 
         //add
-        tasks[nextFreeIndex] = new Event(text, from, to);
+        tasks.add(new Event(text, from, to));
         nextFreeIndex++;
 
         printSuccessMessage();
