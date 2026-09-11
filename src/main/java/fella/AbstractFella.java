@@ -57,7 +57,7 @@ public abstract class AbstractFella {
      */
     static boolean isRunning = true;
     ArrayList<Task> tasks = new ArrayList<>();
-    int nextFreeIndex = 0;
+    int taskListSize = 0;
 
     // ============================================== PRINT MESSAGES ============================================================
     /**
@@ -81,8 +81,8 @@ public abstract class AbstractFella {
     public void printSuccessMessage() {
         //print result
         System.out.println(">> aDDED INTO LIST !");
-        System.out.println(">> " + tasks.get(nextFreeIndex-1).toString());
-        System.out.println(">> nOW YOU HAVE " + nextFreeIndex + " TASKS IN THE LIST ! ! !");
+        System.out.println(">> " + tasks.get(taskListSize-1).toString());
+        System.out.println(">> nOW YOU HAVE " + taskListSize + " TASKS IN THE LIST ! ! !");
         System.out.println();
     }
 
@@ -136,7 +136,7 @@ public abstract class AbstractFella {
     private void getList() {
         int listCounter;
 
-        for (int i = 0; i < nextFreeIndex; i++) {
+        for (int i = 0; i < taskListSize; i++) {
             listCounter = i + 1;
 
             System.out.println(String.format("%d. %s", 
@@ -213,7 +213,7 @@ public abstract class AbstractFella {
 
         // check if within range
         int index = Integer.parseInt(data[1]) - 1;
-        if (index >= nextFreeIndex
+        if (index >= taskListSize
                 || index < 0) {
             throw new InvalidRangeException();
         }
@@ -248,7 +248,7 @@ public abstract class AbstractFella {
         description = input.substring(TODO_KEYWORD.length())
                             .strip();
         tasks.add(new Todo(description));
-        nextFreeIndex++;
+        taskListSize++;
 
         printSuccessMessage();
     }
@@ -307,7 +307,7 @@ public abstract class AbstractFella {
         deadline = description[1].strip();
         
         tasks.add(new Deadline(text, deadline));
-        nextFreeIndex++;
+        taskListSize++;
 
         printSuccessMessage();
     }
@@ -382,7 +382,7 @@ public abstract class AbstractFella {
 
         //add
         tasks.add(new Event(text, from, to));
-        nextFreeIndex++;
+        taskListSize++;
 
         printSuccessMessage();
     }
