@@ -452,7 +452,8 @@ public abstract class AbstractFella {
             System.out.println(">> dELETED "
                 + Integer.toString(index + 1)
                 + "! ! !\n");
-            tasks.get(index).markDone();
+            //TODO: implement delete based on index
+            tasks.remove(index);
         }
     }
 
