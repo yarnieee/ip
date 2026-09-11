@@ -126,6 +126,9 @@ public abstract class AbstractFella {
         } else if (input.startsWith(EVENT_KEYWORD)){
             addEvent(input);
 
+        } else if (input.startsWith(DELETE_KEYWORD)) {
+            delete(input);
+
         } else {
             System.out.println(INCORRECT_COMMAND_STRING);
         }
