@@ -454,6 +454,7 @@ public abstract class AbstractFella {
                 + "! ! !\n");
             //TODO: implement delete based on index
             tasks.remove(index);
+            taskListSize--;
         }
     }
 
