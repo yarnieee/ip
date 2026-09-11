@@ -29,6 +29,7 @@ public abstract class AbstractFella {
     final String LIST_KEYWORD = "list";
     final String MARK_KEYWORD = "mark";
     final String UNMARK_KEYWORD = "unmark";
+    final String DELETE_KEYWORD = "delete";
 
     final String TODO_KEYWORD = "todo";
     final String DEADLINE_KEYWORD = "deadline";
@@ -422,7 +423,64 @@ public abstract class AbstractFella {
             || description[2].strip().isEmpty()) {
             throw new EmptyArgumentException();
         }
-    }    
+    }
+
+    // ============================================== DELETE ============================================================
+
+    private void delete(String cmd) {
+        try {
+            isValidDelete(cmd);
+        } catch (TooFewArgumentsException e) {
+            System.out.println(MISSING_TASK_NUMBER_STRING);
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println(INVALID_NUMBER_STRING);
+            return;
+        } catch (InvalidRangeException e) {
+            System.out.println(INVALID_VALUE_STRING);
+            return;
+        }
+
+        String[] data = cmd.split(" ");
+        int index = Integer.parseInt(data[1]) - 1;
+        
+        //match with keyword & make change
+        if (data[0].startsWith(DELETE_KEYWORD)) {
+            System.out.println(">> dELETED "
+                + Integer.toString(index + 1)
+                + "! ! !\n");
+            tasks.get(index).markDone();
+        }
+    }
+
+    /**
+     * Validates that a delete command contains an existing task number.
+     *
+     * @throws TooFewArgumentsException if the task number is missing
+     * @throws NumberFormatException if the task number is not an integer
+     * @throws InvalidRangeException if the task number is outside the task list
+     */
+    private void isValidDelete(String input)
+            throws TooFewArgumentsException, InvalidRangeException {
+        String[] data = input.split(" ");
+
+        if (data.length < 2) {
+            throw new TooFewArgumentsException();
+        }
+
+        try {
+            Integer.parseInt(data[1]);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException();
+        }
+
+        // check if within range
+        int index = Integer.parseInt(data[1]) - 1;
+        if (index >= taskListSize
+                || index < 0) {
+            throw new InvalidRangeException();
+        }
+    }
 
     // ============================================== MAIN FUNCTION ============================================================
     /**
