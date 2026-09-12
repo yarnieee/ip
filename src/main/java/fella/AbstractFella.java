@@ -99,44 +99,80 @@ public abstract class AbstractFella {
     }
 
     // ============================================== LOAD SAVE ============================================================
+    /**
+     * Check whether the save file exists and is a file.
+     * @param path
+     * @return
+     */
     private boolean fileExists(String path) {
-        return Files.isRegularFile(Paths.get(path));
+        if (Files.isRegularFile(Paths.get(path))) {
+            return true;
+        } else {
+            //make the file
+        }
+
+        return false;
     }
 
-    private void saveData() {
+    /**
+     * Save task at index (index is arraylist index not display index.)
+     * @param index
+     */
+    private void saveData(Task task) {
+        try (FileWriter writer = new FileWriter(SAVE_FILE_PATH, true)) {
+            String saveString = formatSaveString(task);
+
+            writer.write(saveString + System.lineSeparator());
+
+        } catch (IOException e) {
+            return;
+        }
+    }
+
+    /**
+     * Update the saved task list after a mark or unmark operation.
+     * @param index the task index in the in-memory array
+     */
+    private void updateData() {
         try (FileWriter writer = new FileWriter(SAVE_FILE_PATH)) {
             for (int i = 0; i < nextFreeIndex; i++) {
-                Task task = tasks[i];
-                String saveString = formatSaveString(task);
+                writer.write(formatSaveString(tasks[i]));
 
-                writer.write(saveString + System.lineSeparator());
-
+                if (i < nextFreeIndex - 1) {
+                    writer.write(System.lineSeparator());
+                }
             }
         } catch (IOException e) {
             return;
         }
     }
 
+    /**
+     * Returns string which is in the right format to be saved into smartfella.txt save file.
+     * @param task
+     * @return
+     */
     private String formatSaveString(Task task) {
         String saveString;
-        char isDoneChar = (task.isDone()) ? 'X' : ' ';
+        String isDoneString = (task.isDone()) ? "X" : "";
 
         if (task instanceof Deadline deadline) {
             saveString = DEADLINE_CHAR
-                    + "," + isDoneChar
+                    + "," + isDoneString
                     + "," + deadline.getName()
                     + "," + deadline.getDeadline();
         } else if (task instanceof Event event) {
             saveString = EVENT_CHAR
-                    + "," + isDoneChar
+                    + "," + isDoneString
                     + "," + event.getName()
                     + "," + event.getFrom()
                     + "," + event.getTo();
         } else {
             saveString = TODO_CHAR
-                    + "," + isDoneChar
+                    + "," + isDoneString
                     + "," + task.getName();
         }
+
         return saveString;
     }
     
@@ -204,7 +240,6 @@ public abstract class AbstractFella {
      */
     public void matchInput(String input) {
         if (input.equals(BYE_KEYWORD)) {
-            saveData();
             isRunning = false;
 
         } else if (input.equals(LIST_KEYWORD)){
@@ -284,6 +319,8 @@ public abstract class AbstractFella {
                 + "! ! !\n");
             tasks[index].unmarkDone();
         }
+
+        updateData();
     }
 
     /**
@@ -348,7 +385,9 @@ public abstract class AbstractFella {
         description = input.substring(TODO_KEYWORD.length())
                             .strip();
 
-        tasks[nextFreeIndex] = new Todo(description);
+        Task tempTask =  new Todo(description);
+        tasks[nextFreeIndex] = tempTask;
+        saveData(tempTask);
         nextFreeIndex++;
 
         printSuccessMessage();
@@ -407,7 +446,9 @@ public abstract class AbstractFella {
         text = description[0].strip();
         deadline = description[1].strip();
 
-        tasks[nextFreeIndex] = new Deadline(text, deadline);
+        Task tempTask =  new Deadline(text, deadline);
+        tasks[nextFreeIndex] = tempTask;
+        saveData(tempTask);
         nextFreeIndex++;
 
         printSuccessMessage();
@@ -482,7 +523,9 @@ public abstract class AbstractFella {
         to = description[2].strip();
 
         //add
-        tasks[nextFreeIndex] = new Event(text, from, to);
+        Task tempTask = new Event(text, from, to)
+        tasks[nextFreeIndex] = tempTask;
+        saveData(tempTask);
         nextFreeIndex++;
 
         printSuccessMessage();
