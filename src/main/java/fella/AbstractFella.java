@@ -1,5 +1,6 @@
 package fella;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import error.EmptyArgumentException;
@@ -28,6 +29,7 @@ public abstract class AbstractFella {
     final String LIST_KEYWORD = "list";
     final String MARK_KEYWORD = "mark";
     final String UNMARK_KEYWORD = "unmark";
+    final String DELETE_KEYWORD = "delete";
 
     final String TODO_KEYWORD = "todo";
     final String DEADLINE_KEYWORD = "deadline";
@@ -55,8 +57,8 @@ public abstract class AbstractFella {
      * Tracking variables
      */
     static boolean isRunning = true;
-    Task[] tasks = new Task[100];
-    int nextFreeIndex = 0;
+    ArrayList<Task> tasks = new ArrayList<>();
+    int taskListSize = 0;
 
     // ============================================== PRINT MESSAGES ============================================================
     /**
@@ -80,8 +82,8 @@ public abstract class AbstractFella {
     public void printSuccessMessage() {
         //print result
         System.out.println(">> aDDED INTO LIST !");
-        System.out.println(">> " + tasks[nextFreeIndex-1].toString());
-        System.out.println(">> nOW YOU HAVE " + nextFreeIndex + " TASKS IN THE LIST ! ! !");
+        System.out.println(">> " + tasks.get(taskListSize-1).toString());
+        System.out.println(">> nOW YOU HAVE " + taskListSize + " TASKS IN THE LIST ! ! !");
         System.out.println();
     }
 
@@ -124,6 +126,9 @@ public abstract class AbstractFella {
         } else if (input.startsWith(EVENT_KEYWORD)){
             addEvent(input);
 
+        } else if (input.startsWith(DELETE_KEYWORD)) {
+            delete(input);
+
         } else {
             System.out.println(INCORRECT_COMMAND_STRING);
         }
@@ -135,12 +140,12 @@ public abstract class AbstractFella {
     private void getList() {
         int listCounter;
 
-        for (int i = 0; i < nextFreeIndex; i++) {
+        for (int i = 0; i < taskListSize; i++) {
             listCounter = i + 1;
 
             System.out.println(String.format("%d. %s", 
                 listCounter,
-                tasks[i].toString()));
+                tasks.get(i).toString()));
         }
         System.out.println("");
     }
@@ -177,12 +182,12 @@ public abstract class AbstractFella {
             System.out.println(">> mARKED "
                 + Integer.toString(index + 1)
                 + "! ! !\n");
-            tasks[index].markDone();
+            tasks.get(index).markDone();
         } else {
             System.out.println(">> uNMARKED "
                 + Integer.toString(index + 1)
                 + "! ! !\n");
-            tasks[index].unmarkDone();
+            tasks.get(index).unmarkDone();
         }
     }
 
@@ -212,16 +217,16 @@ public abstract class AbstractFella {
 
         // check if within range
         int index = Integer.parseInt(data[1]) - 1;
-        if (index >= nextFreeIndex
+        if (index >= taskListSize
                 || index < 0) {
             throw new InvalidRangeException();
         }
 
-        if (data[0].startsWith(MARK_KEYWORD) && tasks[index].isDone()) {
+        if (data[0].startsWith(MARK_KEYWORD) && tasks.get(index).isDone()) {
             throw new TaskAlreadyMarkedException();
         }
 
-        if (data[0].startsWith(UNMARK_KEYWORD) && !tasks[index].isDone()) {
+        if (data[0].startsWith(UNMARK_KEYWORD) && !tasks.get(index).isDone()) {
             throw new TaskAlreadyUnmarkedException();
         }
     }
@@ -246,9 +251,8 @@ public abstract class AbstractFella {
         //add todo
         description = input.substring(TODO_KEYWORD.length())
                             .strip();
-
-        tasks[nextFreeIndex] = new Todo(description);
-        nextFreeIndex++;
+        tasks.add(new Todo(description));
+        taskListSize++;
 
         printSuccessMessage();
     }
@@ -305,9 +309,9 @@ public abstract class AbstractFella {
                             .split(DEADLINE_DELIM, -1);
         text = description[0].strip();
         deadline = description[1].strip();
-
-        tasks[nextFreeIndex] = new Deadline(text, deadline);
-        nextFreeIndex++;
+        
+        tasks.add(new Deadline(text, deadline));
+        taskListSize++;
 
         printSuccessMessage();
     }
@@ -381,8 +385,8 @@ public abstract class AbstractFella {
         to = description[2].strip();
 
         //add
-        tasks[nextFreeIndex] = new Event(text, from, to);
-        nextFreeIndex++;
+        tasks.add(new Event(text, from, to));
+        taskListSize++;
 
         printSuccessMessage();
     }
@@ -422,7 +426,65 @@ public abstract class AbstractFella {
             || description[2].strip().isEmpty()) {
             throw new EmptyArgumentException();
         }
-    }    
+    }
+
+    // ============================================== DELETE ============================================================
+
+    private void delete(String cmd) {
+        try {
+            isValidDelete(cmd);
+        } catch (TooFewArgumentsException e) {
+            System.out.println(MISSING_TASK_NUMBER_STRING);
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println(INVALID_NUMBER_STRING);
+            return;
+        } catch (InvalidRangeException e) {
+            System.out.println(INVALID_VALUE_STRING);
+            return;
+        }
+
+        String[] data = cmd.split(" ");
+        int index = Integer.parseInt(data[1]) - 1;
+        
+        //match with keyword & make change
+        if (data[0].startsWith(DELETE_KEYWORD)) {
+            System.out.println(">> dELETED "
+                + Integer.toString(index + 1)
+                + "! ! !\n");
+            tasks.remove(index);
+            taskListSize--;
+        }
+    }
+
+    /**
+     * Validates that a delete command contains an existing task number.
+     *
+     * @throws TooFewArgumentsException if the task number is missing
+     * @throws NumberFormatException if the task number is not an integer
+     * @throws InvalidRangeException if the task number is outside the task list
+     */
+    private void isValidDelete(String input)
+            throws TooFewArgumentsException, InvalidRangeException {
+        String[] data = input.split(" ");
+
+        if (data.length < 2) {
+            throw new TooFewArgumentsException();
+        }
+
+        try {
+            Integer.parseInt(data[1]);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException();
+        }
+
+        // check if within range
+        int index = Integer.parseInt(data[1]) - 1;
+        if (index >= taskListSize
+                || index < 0) {
+            throw new InvalidRangeException();
+        }
+    }
 
     // ============================================== MAIN FUNCTION ============================================================
     /**
