@@ -44,9 +44,9 @@ public abstract class AbstractFella {
     final String DEADLINE_DELIM = "/by";
     final String EVENT_START_DELIM = "/from";
     final String EVENT_END_DELIM = "/to";
-    final char TODO_CHAR = 'T';
-    final char DEADLINE_CHAR = 'D';
-    final char EVENT_CHAR = 'E';
+    final String TODO_CHAR = "T"; //slightly misleading given that it is a string not a char
+    final String DEADLINE_CHAR = "D";
+    final String EVENT_CHAR = "E";
 
     final String INCORRECT_COMMAND_STRING = ">> cOMMAND nOT rECOGNISED ! ! !\n";
     final String INVALID_VALUE_STRING = ">> tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
@@ -107,25 +107,7 @@ public abstract class AbstractFella {
         try (FileWriter writer = new FileWriter(SAVE_FILE_PATH)) {
             for (int i = 0; i < nextFreeIndex; i++) {
                 Task task = tasks[i];
-                String saveString;
-                char isDoneChar = (task.isDone()) ? 'X' : ' ';
-
-                if (task instanceof Deadline deadline) {
-                    saveString = DEADLINE_CHAR
-                            + "," + isDoneChar
-                            + "," + deadline.getName()
-                            + "," + deadline.getDeadline();
-                } else if (task instanceof Event event) {
-                    saveString = EVENT_CHAR
-                            + "," + isDoneChar
-                            + "," + event.getName()
-                            + "," + event.getFrom()
-                            + "," + event.getTo();
-                } else {
-                    saveString = TODO_CHAR
-                            + "," + isDoneChar
-                            + "," + task.getName();
-                }
+                String saveString = formatSaveString(task);
 
                 writer.write(saveString + System.lineSeparator());
 
@@ -133,6 +115,29 @@ public abstract class AbstractFella {
         } catch (IOException e) {
             return;
         }
+    }
+
+    private String formatSaveString(Task task) {
+        String saveString;
+        char isDoneChar = (task.isDone()) ? 'X' : ' ';
+
+        if (task instanceof Deadline deadline) {
+            saveString = DEADLINE_CHAR
+                    + "," + isDoneChar
+                    + "," + deadline.getName()
+                    + "," + deadline.getDeadline();
+        } else if (task instanceof Event event) {
+            saveString = EVENT_CHAR
+                    + "," + isDoneChar
+                    + "," + event.getName()
+                    + "," + event.getFrom()
+                    + "," + event.getTo();
+        } else {
+            saveString = TODO_CHAR
+                    + "," + isDoneChar
+                    + "," + task.getName();
+        }
+        return saveString;
     }
     
     private void loadData() {
@@ -145,12 +150,37 @@ public abstract class AbstractFella {
         File f = new File(SAVE_FILE_PATH);
 
         try (Scanner s = new Scanner(f)) {
-            //TODO: match every line
+            while (s.hasNext()) {
+                parseSaveString(s.nextLine());
+            }
             
         } catch (FileNotFoundException e) {
             return;
         }
-    } 
+    }
+
+    private void parseSaveString(String saveString) {
+        String[] temp = saveString.split(",");
+
+        if (saveString.startsWith(TODO_CHAR)){
+            tasks[nextFreeIndex] = new Todo(temp[2]);
+            nextFreeIndex++;
+
+        } else if (saveString.startsWith(DEADLINE_CHAR)){
+            tasks[nextFreeIndex] = new Deadline(temp[2], temp[3]);
+            nextFreeIndex++;
+
+        } else if (saveString.startsWith(EVENT_CHAR)){
+            tasks[nextFreeIndex] = new Event(temp[2], temp[3], temp[4]);
+            nextFreeIndex++;
+
+        } else {
+        }
+
+        if (temp[1] == "X") {
+            tasks[nextFreeIndex].markDone();
+        }
+    }
 
 
     // ============================================== IMPORTANT FUNCTIONS ============================================================
