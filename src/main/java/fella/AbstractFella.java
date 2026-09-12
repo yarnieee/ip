@@ -1,5 +1,11 @@
 package fella;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 import error.EmptyArgumentException;
@@ -9,6 +15,7 @@ import error.InvalidRangeException;
 import error.TaskAlreadyMarkedException;
 import error.TaskAlreadyUnmarkedException;
 import error.TooFewArgumentsException;
+
 import task.Deadline;
 import task.Event;
 import task.Task;
@@ -23,6 +30,8 @@ public abstract class AbstractFella {
     /**
      * Constants
      */
+    final String SAVE_FILE_PATH = "./data/SmartFella.txt";
+    
     final String INPUT_MARKER_STRING = ">>> ";
     final String BYE_KEYWORD = "bye";
     final String LIST_KEYWORD = "list";
@@ -35,6 +44,9 @@ public abstract class AbstractFella {
     final String DEADLINE_DELIM = "/by";
     final String EVENT_START_DELIM = "/from";
     final String EVENT_END_DELIM = "/to";
+    final char TODO_CHAR = 'T';
+    final char DEADLINE_CHAR = 'D';
+    final char EVENT_CHAR = 'E';
 
     final String INCORRECT_COMMAND_STRING = ">> cOMMAND nOT rECOGNISED ! ! !\n";
     final String INVALID_VALUE_STRING = ">> tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
@@ -57,6 +69,7 @@ public abstract class AbstractFella {
     static boolean isRunning = true;
     Task[] tasks = new Task[100];
     int nextFreeIndex = 0;
+    static boolean initState = true;
 
     // ============================================== PRINT MESSAGES ============================================================
     /**
@@ -85,6 +98,61 @@ public abstract class AbstractFella {
         System.out.println();
     }
 
+    // ============================================== LOAD SAVE ============================================================
+    private boolean fileExists(String path) {
+        return Files.isRegularFile(Paths.get(path));
+    }
+
+    private void saveData() {
+        try (FileWriter writer = new FileWriter(SAVE_FILE_PATH)) {
+            for (int i = 0; i < nextFreeIndex; i++) {
+                Task task = tasks[i];
+                String saveString;
+                char isDoneChar = (task.isDone()) ? 'X' : ' ';
+
+                if (task instanceof Deadline deadline) {
+                    saveString = DEADLINE_CHAR
+                            + "," + isDoneChar
+                            + "," + deadline.getName()
+                            + "," + deadline.getDeadline();
+                } else if (task instanceof Event event) {
+                    saveString = EVENT_CHAR
+                            + "," + isDoneChar
+                            + "," + event.getName()
+                            + "," + event.getFrom()
+                            + "," + event.getTo();
+                } else {
+                    saveString = TODO_CHAR
+                            + "," + isDoneChar
+                            + "," + task.getName();
+                }
+
+                writer.write(saveString + System.lineSeparator());
+
+            }
+        } catch (IOException e) {
+            return;
+        }
+    }
+    
+    private void loadData() {
+        // open path of ./data/SmartFella.txt
+        if (!fileExists(SAVE_FILE_PATH)) {
+            return;
+        }
+
+        //file exists. so load data from file
+        File f = new File(SAVE_FILE_PATH);
+
+        try (Scanner s = new Scanner(f)) {
+            //TODO: match every line
+            
+        } catch (FileNotFoundException e) {
+            return;
+        }
+    } 
+
+
     // ============================================== IMPORTANT FUNCTIONS ============================================================
     /**
      * Receives user commands and executes corresponding actions.
@@ -106,6 +174,7 @@ public abstract class AbstractFella {
      */
     public void matchInput(String input) {
         if (input.equals(BYE_KEYWORD)) {
+            saveData();
             isRunning = false;
 
         } else if (input.equals(LIST_KEYWORD)){
@@ -128,6 +197,7 @@ public abstract class AbstractFella {
             System.out.println(INCORRECT_COMMAND_STRING);
         }
     }
+    // TODO: global enable of whether to print the success message or not.
     
     /**
      * Prints a list of all previous non-keyword commands, which have been saved as part of the To-do list.
@@ -244,6 +314,7 @@ public abstract class AbstractFella {
         }
 
         //add todo
+        //TODO: I can just copy this part and assume that the input is already in the right format...?
         description = input.substring(TODO_KEYWORD.length())
                             .strip();
 
@@ -431,6 +502,9 @@ public abstract class AbstractFella {
     public void run() {
         printFella();
         printGreeting();
+
+        //load current data if exists
+        loadData();
 
         // main process
         while (isRunning) {
