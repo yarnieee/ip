@@ -107,11 +107,14 @@ public abstract class AbstractFella {
     private boolean fileExists(String path) {
         if (Files.isRegularFile(Paths.get(path))) {
             return true;
-        } else {
-            //make the file
         }
 
-        return false;
+        try {
+            Files.createFile(Paths.get(path));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
@@ -198,24 +201,22 @@ public abstract class AbstractFella {
     private void parseSaveString(String saveString) {
         String[] temp = saveString.split(",");
 
-        if (saveString.startsWith(TODO_CHAR)){
-            tasks[nextFreeIndex] = new Todo(temp[2]);
-            nextFreeIndex++;
-
-        } else if (saveString.startsWith(DEADLINE_CHAR)){
+        if (saveString.startsWith(DEADLINE_CHAR)){
             tasks[nextFreeIndex] = new Deadline(temp[2], temp[3]);
-            nextFreeIndex++;
 
         } else if (saveString.startsWith(EVENT_CHAR)){
             tasks[nextFreeIndex] = new Event(temp[2], temp[3], temp[4]);
-            nextFreeIndex++;
 
         } else {
-        }
+            tasks[nextFreeIndex] = new Todo(temp[2]);
 
-        if (temp[1] == "X") {
+        } 
+
+        if (temp[1].equals("X")) {
             tasks[nextFreeIndex].markDone();
         }
+
+        nextFreeIndex++;
     }
 
 
