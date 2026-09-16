@@ -601,6 +601,8 @@ public abstract class AbstractFella {
             tasks.remove(index);
             taskListSize--;
         }
+
+        updateData();
     }
 
     /**
