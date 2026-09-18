@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -107,13 +108,22 @@ public abstract class AbstractFella {
      * @return
      */
     private boolean fileExists(String path) {
-        if (Files.isRegularFile(Paths.get(path))) {
+        Path filePath = Paths.get(path);
+
+        if (Files.isRegularFile(filePath)) {
             return true;
         }
 
         try {
-            Files.createFile(Paths.get(path));
-            return true;
+            Path parent = filePath.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);
+            }
+            return Files.isRegularFile(filePath);
         } catch (IOException e) {
             return false;
         }
@@ -124,6 +134,10 @@ public abstract class AbstractFella {
      * @param index
      */
     private void saveData(Task task) {
+        if (!fileExists(SAVE_FILE_PATH)) {
+            return;
+        }
+
         try (FileWriter writer = new FileWriter(SAVE_FILE_PATH, true)) {
             String saveString = formatSaveString(task);
 
@@ -139,6 +153,10 @@ public abstract class AbstractFella {
      * @param index the task index in the in-memory array
      */
     private void updateData() {
+        if (!fileExists(SAVE_FILE_PATH)) {
+            return;
+        }
+
         try (FileWriter writer = new FileWriter(SAVE_FILE_PATH)) {
             for (int i = 0; i < taskListSize; i++) {
                 writer.write(formatSaveString(tasks.get(i)));
