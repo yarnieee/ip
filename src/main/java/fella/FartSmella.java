@@ -2,9 +2,25 @@ package fella;
 
 public class FartSmella extends AbstractFella {
     public FartSmella() {
-        GREETING_STRING = ">> bEHOLD, A fART sMELLA ! ! !\n" +
-                ">> aSK AND YOU SHALL RECEIVE ! ! !\n\n";
-        GOODBYE_STRING = ">> hAHAHAHHAA, wE SHALL MEET AGAIN ! ! !\n\n";
+        GREETING_STRING = ">> bEhOLd, A fArT sMeLLA ! ! !\n" +
+                ">> aSk aND yOu sHaLL rEceIVE ! ! !\n\n";
+        GOODBYE_STRING = ">> hAHAHAHHAA, wE sHaLL mEeT aGAIN ! ! !\n\n";
+
+        INCORRECT_COMMAND_STRING = ">> yOUR cOmMaND iS wRoNG ! ! !\n";
+        INVALID_VALUE_STRING = ">> tHaT's nOt A vAliD vAlUe ! ! !\n";
+        MISSING_TASK_NUMBER_STRING = ">> nO tAsK nUMbER ? ? ?\n";
+        INVALID_NUMBER_STRING = ">> dO yOU kNOw wHat nUmBeRs aRe ? ? ?\n";
+        ALREADY_MARKED_STRING = ">> tHaT tAsK iS alREaDY mArKEd ! ! !\n";
+        ALREADY_UNMARKED_STRING = ">> tHaT tAsK iS alREaDY uNMarKEd ! ! !\n";
+        TODO_FORMAT_ERROR_STRING = ">> tOdO nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
+        TODO_EMPTY_ERROR_STRING = ">> tOdO dEsCrIpTiOn CaNnOt Be EmPtY ! ! !\n";
+        DEADLINE_FORMAT_ERROR_STRING = ">> dEaDlInE nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
+        DEADLINE_COUNT_ERROR_STRING = ">> dEaDlInE nEeDs A dEsCrIpTiOn AnD oNe /bY dAtE ! ! !\n";
+        DEADLINE_EMPTY_ERROR_STRING = ">> dEaDlInE dEsCrIpTiOn AnD dAtE cAnNoT bE eMpTy ! ! !\n";
+        EVENT_FORMAT_ERROR_STRING = ">> eVeNt nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
+        EVENT_COUNT_ERROR_STRING = ">> eVeNt nEeDs A dEsCrIpTiOn, OnE /fRoM, AnD oNe /tO ! ! !\n";
+        EVENT_EMPTY_ERROR_STRING = ">> eVeNt dEsCrIpTiOn, StArT, AnD eNd CaNnOt Be EmPtY ! ! !\n";
+
         FELLA_STRING = "@@@@@@@@*=-=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%##*==+#######\n"+
             "@@@@@@@@@#+::-*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%###*+--+*#######\n"+
             "@@@@@@@@@@%*=-:-=*#%@@@@@@%%%%@@@@@@@@@@@@@@%%%%%%%%##**+=---+*#######*\n"+
@@ -46,15 +62,5 @@ public class FartSmella extends AbstractFella {
             "+=++=======--==+*#%@%##****+++=++#%%%#######**********+++++++++=-:..   \n"+
             "====----====---=****###***++++==+*%%%%%%###********+++++++***#***+=:.. \n"+
             "====----=++====-=+*++####***+++++*#%%%%%%###******++++***##%%%%%%%#*=:.\n";
-    }
-
-    @Override
-    public void matchInput(String input) {
-        if (input.equals(BYE_KEYWORD)) {
-            isRunning = false;
-
-        } else {
-            System.out.println(">> oNE DOES NOT TELL THE fART sMELLA WHAT TO DO ! ! !\n");
-        }
     }
 }
