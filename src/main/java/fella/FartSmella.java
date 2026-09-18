@@ -1,9 +1,11 @@
 package fella;
 
 public class FartSmella extends AbstractFella {
-    @Override
-    public void printFella() {
-        System.out.println("@@@@@@@@*=-=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%##*==+#######\n"+
+    public FartSmella() {
+        GREETING_STRING = ">> bEHOLD, A fART sMELLA ! ! !\n" +
+                ">> aSK AND YOU SHALL RECEIVE ! ! !\n\n";
+        GOODBYE_STRING = ">> hAHAHAHHAA, wE SHALL MEET AGAIN ! ! !\n\n";
+        FELLA_STRING = "@@@@@@@@*=-=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%##*==+#######\n"+
             "@@@@@@@@@#+::-*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%###*+--+*#######\n"+
             "@@@@@@@@@@%*=-:-=*#%@@@@@@%%%%@@@@@@@@@@@@@@%%%%%%%%##**+=---+*#######*\n"+
             "@@@@@@@@@@@%#*==-==+**##***++++++******########**+++++==---=*########**\n"+
@@ -43,18 +45,7 @@ public class FartSmella extends AbstractFella {
             "+=+========--=+**#@@%#*****++++++#%%########**************+++=-:..     \n"+
             "+=++=======--==+*#%@%##****+++=++#%%%#######**********+++++++++=-:..   \n"+
             "====----====---=****###***++++==+*%%%%%%###********+++++++***#***+=:.. \n"+
-            "====----=++====-=+*++####***+++++*#%%%%%%###******++++***##%%%%%%%#*=:.\n");
-    }
-
-    @Override
-    public void printGreeting() {
-        System.out.print(">> bEHOLD, A fART sMELLA ! ! !\n" +
-                ">> aSK AND YOU SHALL RECEIVE ! ! !\n\n");
-    }
-
-    @Override
-    public void printGoodbye() {
-        System.out.println(">> hAHAHAHHAA, wE SHALL MEET AGAIN ! ! !\n\n");
+            "====----=++====-=+*++####***+++++*#%%%%%%###******++++***##%%%%%%%#*=:.\n";
     }
 
     @Override

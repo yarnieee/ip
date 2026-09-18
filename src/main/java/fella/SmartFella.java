@@ -2,9 +2,11 @@ package fella;
 
 public class SmartFella extends AbstractFella {
 
-    @Override
-    public void printFella() {
-        System.out.println("                    ...                                                 \n"+
+    public SmartFella() {
+        GREETING_STRING = ">> bEHOLD, A sMART fELLA ! ! !\n" +
+                ">> i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n\n";
+        GOODBYE_STRING = ">> fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n";
+        FELLA_STRING = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
             "              ---------.                         :-------.              \n"+
             "            .-------.                              :-------.            \n"+
@@ -41,17 +43,6 @@ public class SmartFella extends AbstractFella {
             "        *###**###%%%%%%%%%@@@@@@@@@@@@@@@@@@@@%%%%%###%%#*++++====+==+++\n"+
             "      .####**#%%%%%####%%%@@@@@@@@@@@@@@@@@@@%%%%#########*++=++++++=+++\n"+
             "     .%%####%%%##########%%@@@@@@@@@%%%@@@@@%%%%############++===++++==+\n"+
-            "     %%###%%%%#########%%%%%@@@@@@%###*#@@@%%%%%%############+=====+===-\n");
-    }
-
-    @Override
-    public void printGreeting() {
-        System.out.println(">> bEHOLD, A sMART fELLA ! ! !\n" +
-                ">> i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n\n");
-    }
-
-    @Override
-    public void printGoodbye() {
-        System.out.println(">> fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n");
+            "     %%###%%%%#########%%%%%@@@@@@%###*#@@@%%%%%%############+=====+===-\n";
     }
 }

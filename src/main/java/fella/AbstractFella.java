@@ -51,20 +51,24 @@ public abstract class AbstractFella {
     final String DEADLINE_CHAR = "D";
     final String EVENT_CHAR = "E";
 
-    final String INCORRECT_COMMAND_STRING = ">> cOMMAND nOT rECOGNISED ! ! !\n";
-    final String INVALID_VALUE_STRING = ">> tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
-    final String MISSING_TASK_NUMBER_STRING = ">> tELL ME WHICH TASK TO MARK OR UNMARK ! ! !\n";
-    final String INVALID_NUMBER_STRING = ">> tHAT TASK NUMBER IS NOT A NUMBER ! ! !\n";
-    final String ALREADY_MARKED_STRING = ">> tHAT TASK IS ALREADY MARKED ! ! !\n";
-    final String ALREADY_UNMARKED_STRING = ">> tHAT TASK IS ALREADY UNMARKED ! ! !\n";
-    final String TODO_FORMAT_ERROR_STRING = ">> tODO NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
-    final String TODO_EMPTY_ERROR_STRING = ">> tODO DESCRIPTION CANNOT BE EMPTY ! ! !\n";
-    final String DEADLINE_FORMAT_ERROR_STRING = ">> dEADLINE NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
-    final String DEADLINE_COUNT_ERROR_STRING = ">> dEADLINE NEEDS A DESCRIPTION AND ONE /by DATE ! ! !\n";
-    final String DEADLINE_EMPTY_ERROR_STRING = ">> dEADLINE DESCRIPTION AND DATE CANNOT BE EMPTY ! ! !\n";
-    final String EVENT_FORMAT_ERROR_STRING = ">> eVENT NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
-    final String EVENT_COUNT_ERROR_STRING = ">> eVENT NEEDS A DESCRIPTION, ONE /from, AND ONE /to ! ! !\n";
-    final String EVENT_EMPTY_ERROR_STRING = ">> eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
+    protected String FELLA_STRING = "";
+    protected String GREETING_STRING = "<greeting message>\n";
+    protected String GOODBYE_STRING = "<goodbye message>\n";
+
+    protected String INCORRECT_COMMAND_STRING = ">> cOMMAND nOT rECOGNISED ! ! !\n";
+    protected String INVALID_VALUE_STRING = ">> tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
+    protected String MISSING_TASK_NUMBER_STRING = ">> tELL ME WHICH TASK TO MARK OR UNMARK ! ! !\n";
+    protected String INVALID_NUMBER_STRING = ">> tHAT TASK NUMBER IS NOT A NUMBER ! ! !\n";
+    protected String ALREADY_MARKED_STRING = ">> tHAT TASK IS ALREADY MARKED ! ! !\n";
+    protected String ALREADY_UNMARKED_STRING = ">> tHAT TASK IS ALREADY UNMARKED ! ! !\n";
+    protected String TODO_FORMAT_ERROR_STRING = ">> tODO NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    protected String TODO_EMPTY_ERROR_STRING = ">> tODO DESCRIPTION CANNOT BE EMPTY ! ! !\n";
+    protected String DEADLINE_FORMAT_ERROR_STRING = ">> dEADLINE NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    protected String DEADLINE_COUNT_ERROR_STRING = ">> dEADLINE NEEDS A DESCRIPTION AND ONE /by DATE ! ! !\n";
+    protected String DEADLINE_EMPTY_ERROR_STRING = ">> dEADLINE DESCRIPTION AND DATE CANNOT BE EMPTY ! ! !\n";
+    protected String EVENT_FORMAT_ERROR_STRING = ">> eVENT NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    protected String EVENT_COUNT_ERROR_STRING = ">> eVENT NEEDS A DESCRIPTION, ONE /from, AND ONE /to ! ! !\n";
+    protected String EVENT_EMPTY_ERROR_STRING = ">> eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
 
     /**
      * Tracking variables
@@ -79,15 +83,15 @@ public abstract class AbstractFella {
      * The following methods are intended to be overridden by subclasses SmartFella and FartSmella
      */
     public void printFella() {
-        System.out.println("");
+        System.out.println(FELLA_STRING);
     }
 
     public void printGreeting() {
-        System.out.println("<greeting message>\n");
+        System.out.println(GREETING_STRING);
     }
 
     public void printGoodbye() {
-        System.out.println("<goodbye message>\n");
+        System.out.println(GOODBYE_STRING);
     }
 
     /**
@@ -308,7 +312,7 @@ public abstract class AbstractFella {
      * Takes the user input as param "cmd". If format of "cmd" is correct and within range, task at corresponding index will be marked as done/not done depending on "mark/unmark".
      * @param cmd
      */
-    private void markDone(String cmd) {
+    protected void markDone(String cmd) {
         try {
             isValidMarkDone(cmd);
         } catch (TooFewArgumentsException e) {
@@ -391,7 +395,7 @@ public abstract class AbstractFella {
      * Add Todo item into list
      * @param input
      */
-    private void addTodo(String input) {
+    protected void addTodo(String input) {
         String description;
 
         try {
@@ -446,7 +450,7 @@ public abstract class AbstractFella {
      * Add deadline item into list
      * @param input
      */
-    private void addDeadline(String input) {
+    protected void addDeadline(String input) {
         String[] description;
         String text, deadline;
 
@@ -520,7 +524,7 @@ public abstract class AbstractFella {
      * Add event item into list
      * @param input
      */
-    private void addEvent(String input) {
+    protected void addEvent(String input) {
         String[] description;
         String text, from, to;
 
