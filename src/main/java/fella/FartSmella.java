@@ -1,25 +1,33 @@
 package fella;
 
 public class FartSmella extends AbstractFella {
-    public FartSmella() {
-        GREETING_STRING = ">> bEhOLd, A fArT sMeLLA ! ! !\n" +
-                ">> aSk aND yOu sHaLL rEceIVE ! ! !\n\n";
-        GOODBYE_STRING = ">> hAHAHAHHAA, wE sHaLL mEeT aGAIN ! ! !\n\n";
 
-        INCORRECT_COMMAND_STRING = ">> yOUR cOmMaND iS wRoNG ! ! !\n";
-        INVALID_VALUE_STRING = ">> tHaT's nOt A vAliD vAlUe ! ! !\n";
-        MISSING_TASK_NUMBER_STRING = ">> nO tAsK nUMbER ? ? ?\n";
-        INVALID_NUMBER_STRING = ">> dO yOU kNOw wHat nUmBeRs aRe ? ? ?\n";
-        ALREADY_MARKED_STRING = ">> tHaT tAsK iS alREaDY mArKEd ! ! !\n";
-        ALREADY_UNMARKED_STRING = ">> tHaT tAsK iS alREaDY uNMarKEd ! ! !\n";
-        TODO_FORMAT_ERROR_STRING = ">> tOdO nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
-        TODO_EMPTY_ERROR_STRING = ">> tOdO dEsCrIpTiOn CaNnOt Be EmPtY ! ! !\n";
-        DEADLINE_FORMAT_ERROR_STRING = ">> dEaDlInE nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
-        DEADLINE_COUNT_ERROR_STRING = ">> dEaDlInE nEeDs A dEsCrIpTiOn AnD oNe /bY dAtE ! ! !\n";
-        DEADLINE_EMPTY_ERROR_STRING = ">> dEaDlInE dEsCrIpTiOn AnD dAtE cAnNoT bE eMpTy ! ! !\n";
-        EVENT_FORMAT_ERROR_STRING = ">> eVeNt nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
-        EVENT_COUNT_ERROR_STRING = ">> eVeNt nEeDs A dEsCrIpTiOn, OnE /fRoM, AnD oNe /tO ! ! !\n";
-        EVENT_EMPTY_ERROR_STRING = ">> eVeNt dEsCrIpTiOn, StArT, AnD eNd CaNnOt Be EmPtY ! ! !\n";
+    public FartSmella() {
+        GREETING_STRING = FELLA_TEXT_MARKER + "bEhOLd, A fArT sMeLLA ! ! !\n" +
+                FELLA_TEXT_MARKER + "aSk aND yOu sHaLL rEceIVE ! ! !\n\n";
+        GOODBYE_STRING = FELLA_TEXT_MARKER + "hAHAHAHHAA, wE sHaLL mEeT aGAIN ! ! !\n\n";
+
+        MARKED_SUCCESS_STRING = FELLA_TEXT_MARKER + "mARkEd ";
+        UNMARKED_SUCCESS_STRING = FELLA_TEXT_MARKER + "uNmARkEd ";
+        DELETED_SUCCESS_STRING = FELLA_TEXT_MARKER + "deLEtEd ";
+        ADD_SUCCESS_STRING = FELLA_TEXT_MARKER + "aDDeD iNtO LiSt !";
+        TASK_COUNT_STRING1 = FELLA_TEXT_MARKER + "nOw yOu hAvE ";
+        TASK_COUNT_STRING2 =  " tAsKS iN tHe LiSt ! ! !";
+
+        INCORRECT_COMMAND_STRING = FELLA_TEXT_MARKER + "yOUR cOmMaND iS wRoNG ! ! !\n";
+        INVALID_VALUE_STRING = FELLA_TEXT_MARKER + "tHaT's nOt A vAliD vAlUe ! ! !\n";
+        MISSING_TASK_NUMBER_STRING = FELLA_TEXT_MARKER + "nO tAsK nUMbER ? ? ?\n";
+        INVALID_NUMBER_STRING = FELLA_TEXT_MARKER + "dO yOU kNOw wHat nUmBeRs aRe ? ? ?\n";
+        ALREADY_MARKED_STRING = FELLA_TEXT_MARKER + "tHaT tAsK iS alREaDY mArKEd ! ! !\n";
+        ALREADY_UNMARKED_STRING = FELLA_TEXT_MARKER + "tHaT tAsK iS alREaDY uNMarKEd ! ! !\n";
+        TODO_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "tOdO nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
+        TODO_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tOdO dEsCrIpTiOn CaNnOt Be EmPtY ! ! !\n";
+        DEADLINE_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "dEaDlInE nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
+        DEADLINE_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "dEaDlInE nEeDs A dEsCrIpTiOn AnD oNe /bY dAtE ! ! !\n";
+        DEADLINE_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "dEaDlInE dEsCrIpTiOn AnD dAtE cAnNoT bE eMpTy ! ! !\n";
+        EVENT_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
+        EVENT_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt nEeDs A dEsCrIpTiOn, OnE /fRoM, AnD oNe /tO ! ! !\n";
+        EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt dEsCrIpTiOn, StArT, AnD eNd CaNnOt Be EmPtY ! ! !\n";
 
         FELLA_STRING = "@@@@@@@@*=-=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%##*==+#######\n"+
             "@@@@@@@@@#+::-*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%###*+--+*#######\n"+

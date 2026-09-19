@@ -50,25 +50,35 @@ public abstract class AbstractFella {
     final String TODO_CHAR = "T"; //slightly misleading given that it is a string not a char
     final String DEADLINE_CHAR = "D";
     final String EVENT_CHAR = "E";
+    final String MARKDONE_CHAR = "X";
+
+    final String FELLA_TEXT_MARKER = ">> ";
 
     protected String FELLA_STRING = "";
     protected String GREETING_STRING = "<greeting message>\n";
     protected String GOODBYE_STRING = "<goodbye message>\n";
 
-    protected String INCORRECT_COMMAND_STRING = ">> cOMMAND nOT rECOGNISED ! ! !\n";
-    protected String INVALID_VALUE_STRING = ">> tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
-    protected String MISSING_TASK_NUMBER_STRING = ">> tELL ME WHICH TASK TO MARK OR UNMARK ! ! !\n";
-    protected String INVALID_NUMBER_STRING = ">> tHAT TASK NUMBER IS NOT A NUMBER ! ! !\n";
-    protected String ALREADY_MARKED_STRING = ">> tHAT TASK IS ALREADY MARKED ! ! !\n";
-    protected String ALREADY_UNMARKED_STRING = ">> tHAT TASK IS ALREADY UNMARKED ! ! !\n";
-    protected String TODO_FORMAT_ERROR_STRING = ">> tODO NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
-    protected String TODO_EMPTY_ERROR_STRING = ">> tODO DESCRIPTION CANNOT BE EMPTY ! ! !\n";
-    protected String DEADLINE_FORMAT_ERROR_STRING = ">> dEADLINE NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
-    protected String DEADLINE_COUNT_ERROR_STRING = ">> dEADLINE NEEDS A DESCRIPTION AND ONE /by DATE ! ! !\n";
-    protected String DEADLINE_EMPTY_ERROR_STRING = ">> dEADLINE DESCRIPTION AND DATE CANNOT BE EMPTY ! ! !\n";
-    protected String EVENT_FORMAT_ERROR_STRING = ">> eVENT NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
-    protected String EVENT_COUNT_ERROR_STRING = ">> eVENT NEEDS A DESCRIPTION, ONE /from, AND ONE /to ! ! !\n";
-    protected String EVENT_EMPTY_ERROR_STRING = ">> eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
+    protected String MARKED_SUCCESS_STRING = FELLA_TEXT_MARKER + "mARKED ";
+    protected String UNMARKED_SUCCESS_STRING = FELLA_TEXT_MARKER + "uNMARKED ";
+    protected String DELETED_SUCCESS_STRING = FELLA_TEXT_MARKER + "dELETED ";
+    protected String ADD_SUCCESS_STRING = FELLA_TEXT_MARKER + "aDDED INTO LIST !";
+    protected String TASK_COUNT_STRING1 = FELLA_TEXT_MARKER + "nOW YOU HAVE ";
+    protected String TASK_COUNT_STRING2 =  " TASKS IN THE LIST ! ! !";
+
+    protected String INCORRECT_COMMAND_STRING = FELLA_TEXT_MARKER + "cOMMAND nOT rECOGNISED ! ! !\n";
+    protected String INVALID_VALUE_STRING = FELLA_TEXT_MARKER + "tHAT TASK NUMBER IS NOT IN THE LIST ! ! !\n";
+    protected String MISSING_TASK_NUMBER_STRING = FELLA_TEXT_MARKER + "tELL ME WHICH TASK TO MARK OR UNMARK ! ! !\n";
+    protected String INVALID_NUMBER_STRING = FELLA_TEXT_MARKER + "tHAT TASK NUMBER IS NOT A NUMBER ! ! !\n";
+    protected String ALREADY_MARKED_STRING = FELLA_TEXT_MARKER + "tHAT TASK IS ALREADY MARKED ! ! !\n";
+    protected String ALREADY_UNMARKED_STRING = FELLA_TEXT_MARKER + "tHAT TASK IS ALREADY UNMARKED ! ! !\n";
+    protected String TODO_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "tODO NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    protected String TODO_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tODO DESCRIPTION CANNOT BE EMPTY ! ! !\n";
+    protected String DEADLINE_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "dEADLINE NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    protected String DEADLINE_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "dEADLINE NEEDS A DESCRIPTION AND ONE /by DATE ! ! !\n";
+    protected String DEADLINE_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "dEADLINE DESCRIPTION AND DATE CANNOT BE EMPTY ! ! !\n";
+    protected String EVENT_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT NEEDS A SPACE BEFORE ITS DESCRIPTION ! ! !\n";
+    protected String EVENT_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT NEEDS A DESCRIPTION, ONE /from, AND ONE /to ! ! !\n";
+    protected String EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
 
     /**
      * Tracking variables
@@ -99,9 +109,9 @@ public abstract class AbstractFella {
      */
     public void printSuccessMessage() {
         //print result
-        System.out.println(">> aDDED INTO LIST !");
-        System.out.println(">> " + tasks.get(taskListSize-1).toString());
-        System.out.println(">> nOW YOU HAVE " + taskListSize + " TASKS IN THE LIST ! ! !");
+        System.out.println(ADD_SUCCESS_STRING);
+        System.out.println("" + tasks.get(taskListSize-1).toString());
+        System.out.println(TASK_COUNT_STRING1 + taskListSize + TASK_COUNT_STRING2);
         System.out.println();
     }
 
@@ -181,7 +191,7 @@ public abstract class AbstractFella {
      */
     private String formatSaveString(Task task) {
         String saveString;
-        String isDoneString = (task.isDone()) ? "X" : "";
+        String isDoneString = (task.isDone()) ? MARKDONE_CHAR : "";
 
         if (task instanceof Deadline deadline) {
             saveString = DEADLINE_CHAR
@@ -236,7 +246,7 @@ public abstract class AbstractFella {
 
         } 
 
-        if (temp[1].equals("X")) {
+        if (temp[1].equals(MARKDONE_CHAR)) {
             tasks.get(taskListSize).markDone();
         }
 
@@ -337,12 +347,12 @@ public abstract class AbstractFella {
         
         //match with keyword & make change
         if (data[0].startsWith(MARK_KEYWORD)) {
-            System.out.println(">> mARKED "
+            System.out.println(MARKED_SUCCESS_STRING
                 + Integer.toString(index + 1)
                 + "! ! !\n");
             tasks.get(index).markDone();
         } else {
-            System.out.println(">> uNMARKED "
+            System.out.println(UNMARKED_SUCCESS_STRING
                 + Integer.toString(index + 1)
                 + "! ! !\n");
             tasks.get(index).unmarkDone();
@@ -409,7 +419,6 @@ public abstract class AbstractFella {
         }
 
         //add todo
-        //TODO: I can just copy this part and assume that the input is already in the right format...?
         description = input.substring(TODO_KEYWORD.length())
                             .strip();
 
@@ -617,7 +626,7 @@ public abstract class AbstractFella {
         
         //match with keyword & make change
         if (data[0].startsWith(DELETE_KEYWORD)) {
-            System.out.println(">> dELETED "
+            System.out.println(DELETED_SUCCESS_STRING
                 + Integer.toString(index + 1)
                 + "! ! !\n");
             tasks.remove(index);

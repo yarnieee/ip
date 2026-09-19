@@ -3,9 +3,9 @@ package fella;
 public class SmartFella extends AbstractFella {
 
     public SmartFella() {
-        GREETING_STRING = ">> bEHOLD, A sMART fELLA ! ! !\n" +
-                ">> i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n\n";
-        GOODBYE_STRING = ">> fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n";
+        GREETING_STRING = FELLA_TEXT_MARKER + "bEHOLD, A sMART fELLA ! ! !\n" +
+                FELLA_TEXT_MARKER + "i SHALL ANSWER YOUR BURNING QUESTIONS ! ! !\n\n";
+        GOODBYE_STRING = FELLA_TEXT_MARKER + "fAREWELL sTRANGER, WE SHALL MEET AGAIN ! ! !\n\n";
         FELLA_STRING = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
             "              ---------.                         :-------.              \n"+
