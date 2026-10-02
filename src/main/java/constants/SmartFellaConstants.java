@@ -70,6 +70,9 @@ public final class SmartFellaConstants extends Constants {
             EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT START TIME MUST BE EARLIER THAN END TIME ! ! !\n";
             LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHERE ARE NO TASKS IN THE LIST ! ! !\n";
             LIST_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
-                    + "lIST OPTIONS MUST BE /sort name asc, /sort name desc, OR /sort date desc ! ! !\n";
+                    + "lIST OPTIONS MUST USE /sort name asc, /sort name desc, /sort date desc, "
+                    + "OR /filter todo, deadline, event, done, NOTDONE ! ! !\n";
+            LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
+                    + "nO TASKS MATCH THE SELECTED FILTER ! ! !\n";
     }
 }
