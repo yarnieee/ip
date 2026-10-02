@@ -1,20 +1,22 @@
+import java.util.Random;
+
 import fella.AbstractFella;
 import fella.FartSmella;
 import fella.SmartFella;
 
 public class Main {
-    private static AbstractFella fella;
+    private static AbstractFella<?> fella;
 
     private static void instantiateFella() {
-        int whichFella = (int)(Math.random() * 101) % 2;
+        int whichFella = new Random().nextInt(2);
 
         switch (whichFella) {
             case 0:
                 fella = new SmartFella();
-                break;
+                return;
             case 1:
                 fella = new FartSmella();
-                break;
+                return;
         }
 
     }
