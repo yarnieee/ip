@@ -50,6 +50,11 @@ public class TaskList {
      * Prints a list of all previous non-keyword commands, which have been saved as part of the To-do list.
      */
     public void getList() {
+        if (taskListSize == 0) {
+            System.out.println(c.LIST_EMPTY_ERROR_STRING);
+            return;
+        }
+
         int listCounter;
 
         for (int i = 0; i < taskListSize; i++) {
