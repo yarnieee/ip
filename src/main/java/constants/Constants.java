@@ -12,6 +12,7 @@ public class Constants {
     public String MARK_KEYWORD = "mark";
     public String UNMARK_KEYWORD = "unmark";
     public String DELETE_KEYWORD = "delete";
+    public String FIND_KEYWORD = "find";
 
     public String TODO_KEYWORD = "todo";
     public String DEADLINE_KEYWORD = "deadline";
@@ -68,4 +69,8 @@ public class Constants {
             + "lIST OPTIONS MUST USE /sort name/date asc/desc AND /filter todo/deadline/event/done/notdone ! ! !\n";
     public String LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
             + "nO TASKS MATCH THE SELECTED FILTER ! ! !\n";
+    public String FIND_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER
+            + "fIND NEEDS A SEARCH TERM ! ! !\n";
+    public String FIND_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
+            + "nO TASKS CONTAIN THAT SEARCH TERM ! ! !\n";
 }

@@ -34,6 +34,10 @@ public class FartSmellaConstants extends Constants {
                 + "lIsT oPtIoNs MuSt UsE /sOrT nAmE/dAtE aSc/dEsC AnD /fIlTeR tOdO/dEaDlInE/eVeNt/dOnE/nOtDoNe ! ! !\n";
         LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
                 + "nO tAsKs MaTcH tHe SeLeCtEd FiLtEr ! ! !\n";
+        FIND_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER
+                + "fInD nEeDs A sEaRcH tErM ! ! !\n";
+        FIND_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
+                + "nO tAsKs CoNtAiN tHaT sEaRcH tErM ! ! !\n";
 
         FELLA_STRING = "@@@@@@@@*=-=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%##*==+#######\n"+
             "@@@@@@@@@#+::-*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%###*+--+*#######\n"+

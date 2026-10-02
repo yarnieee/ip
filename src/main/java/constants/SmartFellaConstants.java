@@ -73,5 +73,9 @@ public final class SmartFellaConstants extends Constants {
                     + "lIST OPTIONS MUST USE /sort name/date asc/desc AND /filter todo/deadline/event/done/notdone ! ! !\n";
             LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
                     + "nO TASKS MATCH THE SELECTED FILTER ! ! !\n";
+            FIND_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER
+                    + "fIND NEEDS A SEARCH TERM ! ! !\n";
+            FIND_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
+                    + "nO TASKS CONTAIN THAT SEARCH TERM ! ! !\n";
     }
 }

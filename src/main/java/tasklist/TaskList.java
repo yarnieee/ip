@@ -7,6 +7,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,36 @@ public class TaskList {
     public Task getTask(int N) {
         // TODO: add error handling checks
         return tasks.get(N);
+    }
+
+    /**
+     * Prints every task whose description contains the supplied search term.
+     * Search is case-insensitive and preserves the task list order.
+     *
+     * @param input the complete find command
+     */
+    public void find(String input) {
+        String searchTerm = input.substring(c.FIND_KEYWORD.length()).strip();
+        if (searchTerm.isEmpty()) {
+            System.out.println(c.FIND_EMPTY_ERROR_STRING);
+            return;
+        }
+
+        String searchTermLowerCase = searchTerm.toLowerCase(Locale.ROOT);
+        boolean foundMatch = false;
+        for (int i = 0; i < taskListSize; i++) {
+            Task task = tasks.get(i);
+            if (task.getName().toLowerCase(Locale.ROOT).contains(searchTermLowerCase)) {
+                System.out.println(String.format("%d. %s", i + 1, task));
+                foundMatch = true;
+            }
+        }
+
+        if (!foundMatch) {
+            System.out.println(c.FIND_NO_MATCHING_TASKS_ERROR_STRING);
+            return;
+        }
+        System.out.println("");
     }
 
     /**
