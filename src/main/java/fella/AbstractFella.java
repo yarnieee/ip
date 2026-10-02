@@ -62,8 +62,7 @@ public abstract class AbstractFella<C extends Constants> {
                 || input.startsWith(c.LIST_KEYWORD + " ")){
             tasks.getList(input);
 
-        } else if (input.equals(c.FIND_KEYWORD)
-                || input.startsWith(c.FIND_KEYWORD + " ")) {
+        } else if (input.startsWith(c.FIND_KEYWORD + " ")) {
             tasks.find(input);
 
         } else if (input.startsWith(c.MARK_KEYWORD)
