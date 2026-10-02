@@ -1,7 +1,9 @@
 package constants;
 
+/** Provides the FartSmella-specific messages used by {@code AbstractFella}. */
 public class FartSmellaConstants extends Constants {
 
+    /** Creates the FartSmella message and artwork set. */
     public FartSmellaConstants() {
         GREETING_STRING = FELLA_TEXT_MARKER + "bEhOLd, A fArT sMeLLA ! ! !\n" +
         FELLA_TEXT_MARKER + "aSk aND yOu sHaLL rEceIVE ! ! !\n\n";
