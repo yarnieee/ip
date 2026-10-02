@@ -1,13 +1,15 @@
 package task;
 
+import java.time.LocalDateTime;
+
 public class Event extends Task {
-    private String from;
-    private String to;
+    private LocalDateTime from;
+    private LocalDateTime to;
 
     /**
      * Init method
      */
-    public Event(String name, String from, String to) {
+    public Event(String name, LocalDateTime from, LocalDateTime to) {
         super(name);
         this.from = from;
         this.to = to;
@@ -34,19 +36,19 @@ public class Event extends Task {
     /**
      * Getter and setter methods
      */
-    public String getFrom() {
+    public LocalDateTime getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
+    public void setFrom(LocalDateTime from) {
         this.from = from;
     }
 
-    public String getTo() {
+    public LocalDateTime getTo() {
         return to;
     }
 
-    public void setTo(String to) {
+    public void setTo(LocalDateTime to) {
         this.to = to;
     }
 }
