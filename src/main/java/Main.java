@@ -4,9 +4,12 @@ import fella.AbstractFella;
 import fella.FartSmella;
 import fella.SmartFella;
 
+/** Starts the SmartFella application with one of the available personalities. */
 public class Main {
+    /** Stores the randomly selected application personality. */
     private static AbstractFella<?> fella;
 
+    /** Creates either a {@link SmartFella} or {@link FartSmella} instance. */
     private static void instantiateFella() {
         int whichFella = new Random().nextInt(2);
 
@@ -20,6 +23,9 @@ public class Main {
         }
 
     }
+    /** Starts the selected personality and its command loop.
+     * @param args command-line arguments, which are not used
+     */
     public static void main(String[] args) {
         instantiateFella();
 
