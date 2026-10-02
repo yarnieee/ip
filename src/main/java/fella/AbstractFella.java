@@ -51,17 +51,6 @@ public abstract class AbstractFella<C extends Constants> {
     }
 
     /**
-     * Prints success message after successful adding of Todo/Event/Deadline
-     */
-    public void printSuccessMessage() {
-        //print result
-        System.out.println(c.ADD_SUCCESS_STRING);
-        System.out.println("" + tasks.getTask(tasks.getSize()-1).toString());
-        System.out.println(c.TASK_COUNT_STRING1 + tasks.getSize() + c.TASK_COUNT_STRING2);
-        System.out.println();
-    }
-
-    /**
      * Match input to specific keywords and perform related actions.
      * @param input
      */

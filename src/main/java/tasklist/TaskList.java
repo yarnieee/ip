@@ -630,5 +630,16 @@ public class TaskList {
         }
     }
 
+    /**
+     * Prints success message after successful adding of Todo/Event/Deadline
+     */
+    public void printSuccessMessage() {
+        //print result
+        System.out.println(c.ADD_SUCCESS_STRING);
+        System.out.println("" + getTask(getSize()-1).toString());
+        System.out.println(c.TASK_COUNT_STRING1 + getSize() + c.TASK_COUNT_STRING2);
+        System.out.println();
+    }
+
     
 }
