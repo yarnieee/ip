@@ -79,15 +79,21 @@ public abstract class AbstractFella<C extends Constants> {
 
         } else if (input.startsWith(c.TODO_KEYWORD)){
             Task new_task = tasks.addTodo(input);
-            storage.saveData(new_task);
+            if (new_task != null) {
+                storage.saveData(new_task);
+            }
 
         } else if (input.startsWith(c.DEADLINE_KEYWORD)){
             Task new_task = tasks.addDeadline(input);
-            storage.saveData(new_task);
+            if (new_task != null) {
+                storage.saveData(new_task);
+            }
 
         } else if (input.startsWith(c.EVENT_KEYWORD)){
             Task new_task = tasks.addEvent(input);
-            storage.saveData(new_task);
+            if (new_task != null) {
+                storage.saveData(new_task);
+            }
 
         } else if (input.startsWith(c.DELETE_KEYWORD)) {
             boolean deleteSuccess = tasks.delete(input);

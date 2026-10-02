@@ -67,6 +67,10 @@ public class Storage {
      * @param task task to save
      */
     public void saveData(Task task) {
+        if (task == null) {
+            return;
+        }
+
         if (!fileExists(saveFilePath)) {
             return;
         }
