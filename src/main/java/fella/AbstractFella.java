@@ -6,10 +6,9 @@ import parser.Parser;
 import tasklist.TaskList;
 import constants.Constants;
 
-/**
- *  The AbstractFella class runs a To-do list manager with an Interesting personality. The ___Fella class creates and tracks instances of the Task class.
- * This is the main file which runs the program.
-*/
+/** Runs the task manager and delegates commands to its parser, task list, and storage.
+ * @param <C> constants type used by the selected personality
+ */
 public abstract class AbstractFella<C extends Constants> {
     // ============================================== VARIABLES ============================================================
     /**
@@ -21,11 +20,15 @@ public abstract class AbstractFella<C extends Constants> {
      * Tracking variables
      */
     static boolean isRunning;
+    /** Constants used for commands and user-facing messages. */
     protected C c;
     private TaskList tasks;
     private Storage storage;
     private Parser parser;
 
+    /** Creates a fella using the supplied personality-specific constants.
+     * @param constants messages and keywords used by this fella
+     */
     protected AbstractFella(C constants) {
         this.c = constants;
         this.tasks = new TaskList(constants);
@@ -35,24 +38,28 @@ public abstract class AbstractFella<C extends Constants> {
     }
 
     // ============================================== PRINT MESSAGES ============================================================
-    /**
-     * The following methods are intended to be overridden by subclasses SmartFella and FartSmella
-     */
+    /** Prints the personality artwork; subclasses may override the output style. */
     public void printFella() {
         System.out.println(c.FELLA_STRING);
     }
 
+    /** Prints the greeting configured in the constants.
+     * Called by {@link #run()}.
+     */
     public void printGreeting() {
         System.out.println(c.GREETING_STRING);
     }
 
+    /** Prints the goodbye message configured in the constants.
+     * Called by {@link #run()}.
+     */
     public void printGoodbye() {
         System.out.println(c.GOODBYE_STRING);
     }
 
     /**
-     * Match input to specific keywords and perform related actions.
-     * @param input
+     * Matches one user command and performs its task-list or storage action.
+     * @param input complete command entered by the user
      */
     public void matchInput(String input) {
         if (input.equals(c.BYE_KEYWORD)) {
@@ -94,9 +101,7 @@ public abstract class AbstractFella<C extends Constants> {
     }
 
     // ============================================== MAIN FUNCTION ============================================================
-    /**
-     * Start the program.
-     */
+    /** Starts the application, loads saved tasks, and repeatedly reads commands. */
     public void run() {
         printFella();
         printGreeting();

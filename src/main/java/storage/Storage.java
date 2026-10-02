@@ -18,6 +18,7 @@ import task.Task;
 import task.Todo;
 import tasklist.TaskList;
 
+/** Saves and loads tasks using the application's comma-separated file format. */
 public class Storage {
 
     private static final DateTimeFormatter STORAGE_DATE_FORMAT =
@@ -26,16 +27,19 @@ public class Storage {
     private String saveFilePath;
     private final Constants c;
     
+    /** Creates storage for the supplied file path.
+     * @param inputFilePath file used to save and load tasks
+     * @param constants keywords and markers used in saved records
+     */
     public Storage(String inputFilePath, Constants constants) {
         this.saveFilePath = inputFilePath;
         this.c = constants;
     }
 
     // ============================================== LOAD SAVE ============================================================
-    /**
-     * Check whether the save file exists and is a file.
-     * @param path
-     * @return
+    /** Ensures that a save path exists and reports whether it is a regular file.
+     * @param path path to check or create
+     * @return true when the path is a regular file
      */
     private boolean fileExists(String path) {
         Path filePath = Paths.get(path);
@@ -59,9 +63,8 @@ public class Storage {
         }
     }
 
-    /**
-     * Save task at index (index is arraylist index not display index.)
-     * @param index
+    /** Appends one task record; called after a task is added.
+     * @param task task to save
      */
     public void saveData(Task task) {
         if (!fileExists(saveFilePath)) {
@@ -78,9 +81,8 @@ public class Storage {
         }
     }
 
-    /**
-     * Update the saved task list after a mark or unmark operation.
-     * @param index the task index in the in-memory array
+    /** Rewrites the file with the current tasks; called after mark, unmark, or delete.
+     * @param tasks current in-memory task list
      */
    public void updateData(TaskList tasks) {
     if (!fileExists(saveFilePath)) {
@@ -96,10 +98,9 @@ public class Storage {
     }
 }
 
-    /**
-     * Returns string which is in the right format to be saved into smartfella.txt save file.
-     * @param task
-     * @return
+    /** Converts one task into the record format used by {@link #saveData(Task)}.
+     * @param task task to convert
+     * @return comma-separated task record
      */
     private String formatSaveString(Task task) {
         String saveString;
@@ -125,6 +126,10 @@ public class Storage {
         return saveString;
     }
     
+    /** Loads saved records into the supplied task list; called when the app starts.
+     * @param tasks task list to populate
+     * @return the supplied list after loading saved tasks
+     */
     public TaskList loadData(TaskList tasks) {
         // open path of ./data/SmartFella.txt
         if (!fileExists(saveFilePath)) {
@@ -149,7 +154,10 @@ public class Storage {
         
     }
 
-    // TODO: how does the storage interact with the TaskList object?
+    /** Converts one saved record into a task; called by {@link #loadData(TaskList)}.
+     * @param saveString comma-separated record from the save file
+     * @return task represented by the record
+     */
     private Task parseSaveString(String saveString) {
         String[] temp = saveString.split(",");
 

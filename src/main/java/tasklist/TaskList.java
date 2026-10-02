@@ -25,14 +25,22 @@ import task.Todo;
 
 import constants.Constants;
 
+/** Stores tasks and handles task-related commands from {@code AbstractFella}. */
 public class TaskList {
+    /** Recognises the accepted user date formats. */
     private static final Pattern DATE_PATTERN = Pattern.compile(
             "^(\\d{2})-(\\d{2})(?:-(\\d{2}))?(?:\\s+(\\d{4}))?$");
 
+    /** Tasks in their current insertion order. */
     ArrayList<Task> tasks;
+    /** Number of tasks currently stored. */
     int taskListSize;
+    /** Keywords and messages used when commands are processed. */
     private final Constants c;
 
+    /** Creates an empty list using the supplied constants.
+     * @param constants keywords and messages used by this list
+     */
     public TaskList(Constants constants) {
         this.tasks = new ArrayList<>();
         this.taskListSize = 0;
@@ -40,10 +48,17 @@ public class TaskList {
     }
 
     // ============================================== SIZE ============================================================
+    /** Returns the number of stored tasks; used by the fella and storage.
+     * @return current task count
+     */
     public int getSize() {
         return taskListSize;
     }
 
+    /** Returns a task by its zero-based internal index.
+     * @param N zero-based task index
+     * @return task at the requested index
+     */
     public Task getTask(int N) {
         // TODO: add error handling checks
         return tasks.get(N);
@@ -53,7 +68,7 @@ public class TaskList {
      * Prints every task whose description contains the supplied search term.
      * Search is case-insensitive and preserves the task list order.
      *
-     * @param input the complete find command
+     * @param input complete find command, such as {@code find book}
      */
     public void find(String input) {
         String searchTerm = input.substring(c.FIND_KEYWORD.length()).strip();
@@ -80,16 +95,16 @@ public class TaskList {
     }
 
     /**
-     * Prints a list of all previous non-keyword commands, which have been saved as part of the To-do list.
+     * Prints all tasks in their current order; used by the plain {@code list} command.
      */
     public void getList() {
         getList(c.LIST_KEYWORD);
     }
 
     /**
-     * Prints tasks according to an optional sorting request.
+     * Prints tasks according to optional sorting and filtering requests.
      *
-     * @param input the complete list command
+     * @param input complete list command entered by the user
      */
     public void getList(String input) {
         if (taskListSize == 0) {
@@ -143,6 +158,10 @@ public class TaskList {
         System.out.println("");
     }
 
+    /** Validates sort and filter tokens before {@link #getList(String)} prints tasks.
+     * @param arguments list command split into tokens
+     * @return true when every option is supported
+     */
     private boolean isValidListOptions(String[] arguments) {
         if (arguments.length == 1) {
             return true;
@@ -191,12 +210,21 @@ public class TaskList {
         return true;
     }
 
+    /** Checks whether one filter token names a supported task type or status.
+     * @param filter filter token from a list command
+     * @return true when the token is supported
+     */
     private boolean isValidListFilter(String filter) {
         return filter.equals(c.TODO_KEYWORD) || filter.equals(c.DEADLINE_KEYWORD)
                 || filter.equals(c.EVENT_KEYWORD) || filter.equals(c.LIST_DONE_FILTER)
                 || filter.equals(c.LIST_NOT_DONE_FILTER);
     }
 
+    /** Checks whether a task satisfies the selected type and status filters.
+     * @param task task to test
+     * @param filters filter tokens from the list command
+     * @return true when the task matches every filter category
+     */
     private boolean matchesFilters(Task task, List<String> filters) {
         boolean hasTypeFilter = false;
         boolean matchesType = false;
@@ -225,6 +253,11 @@ public class TaskList {
         return (!hasTypeFilter || matchesType) && (!hasStatusFilter || matchesStatus);
     }
 
+    /** Builds the comparator requested by a list sort option.
+     * @param field name or date sort field
+     * @param direction ascending or descending order
+     * @return comparator used by {@link #getList(String)}
+     */
     private Comparator<Task> getListComparator(String field, String direction) {
         Comparator<Task> comparator;
         if (field.equals(c.LIST_NAME_FIELD)) {
@@ -252,6 +285,10 @@ public class TaskList {
         return direction.equals(c.LIST_DESCENDING) ? comparator.reversed() : comparator;
     }
 
+    /** Returns the date used when sorting a dated task.
+     * @param task task to inspect
+     * @return deadline or event start date, or null for a todo
+     */
     private LocalDateTime getTaskDate(Task task) {
         if (task instanceof Deadline deadline) {
             return deadline.getDeadline();
@@ -263,13 +300,16 @@ public class TaskList {
     }
 
     // ============================================== ADD/VALIDATE ITEMS ============================================================
+    /** Adds an existing task, usually while loading saved data.
+     * @param newTask task to append to this list
+     */
     public void addTaskObject(Task newTask) {
         tasks.add(newTask);
         taskListSize++;
     }
-    /**
-     * Add Todo item into list
-     * @param input
+    /** Adds a todo when the input has a valid description.
+     * @param input complete todo command entered by the user
+     * @return created todo, or {@code null} when validation fails
      */
     public Task addTodo(String input) {
         String description;
@@ -298,6 +338,7 @@ public class TaskList {
     /**
      * Validates the format of a todo command.
      *
+     * @param input complete todo command
      * @throws IncorrectArgumentFormatException if no space follows the command keyword
      * @throws EmptyArgumentException if the description is missing
      */
@@ -320,9 +361,9 @@ public class TaskList {
         }
     }
 
-    /**
-     * Add deadline item into list
-     * @param input
+    /** Adds a deadline when its description and date are valid.
+     * @param input complete deadline command entered by the user
+     * @return created deadline, or {@code null} when validation fails
      */
     public Task addDeadline(String input) {
         String[] description;
@@ -364,6 +405,7 @@ public class TaskList {
     /**
      * Validates the format of a deadline command.
      *
+     * @param input complete deadline command
      * @throws IncorrectArgumentFormatException if no space follows the command keyword
      * @throws IncorrectArgumentCountException if there is not exactly one {@code /by} delimiter
      * @throws EmptyArgumentException if the description or deadline is empty
@@ -401,9 +443,9 @@ public class TaskList {
         parseDateTime(description[1].strip());
     }
 
-    /**
-     * Add event item into list
-     * @param input
+    /** Adds an event when its description, dates, and date order are valid.
+     * @param input complete event command entered by the user
+     * @return created event, or {@code null} when validation fails
      */
     public Task addEvent(String input) {
         String[] description;
@@ -454,6 +496,7 @@ public class TaskList {
     /**
      * Validates the format of an event command.
      *
+     * @param input complete event command
      * @throws IncorrectArgumentFormatException if no space follows the command keyword
      * @throws IncorrectArgumentCountException if there are not exactly two time delimiters
      * @throws EmptyArgumentException if the description, start, or end time is empty
@@ -522,9 +565,8 @@ public class TaskList {
         }
     }
 
-    /**
-     * Takes the user input as param "cmd". If format of "cmd" is correct and within range, task at corresponding index will be marked as done/not done depending on "mark/unmark".
-     * @param cmd
+    /** Marks or unmarks the indexed task according to the command.
+     * @param cmd mark or unmark command containing a one-based task number
      */
     public void markDone(String cmd) {
         try {
@@ -566,6 +608,7 @@ public class TaskList {
     /**
      * Validates that a mark or unmark command contains an existing task number.
      *
+     * @param input mark or unmark command to validate
      * @throws TooFewArgumentsException if the task number is missing
      * @throws NumberFormatException if the task number is not an integer
      * @throws InvalidRangeException if the task number is outside the task list
@@ -603,6 +646,10 @@ public class TaskList {
         }
     }
     // ============================================== DELETE ============================================================
+    /** Deletes the indexed task when the command contains a valid number.
+     * @param cmd delete command containing a one-based task number
+     * @return true when validation succeeds, otherwise false
+     */
     public boolean delete(String cmd) {
         try {
             isValidDelete(cmd);
@@ -635,6 +682,7 @@ public class TaskList {
     /**
      * Validates that a delete command contains an existing task number.
      *
+     * @param input delete command to validate
      * @throws TooFewArgumentsException if the task number is missing
      * @throws NumberFormatException if the task number is not an integer
      * @throws InvalidRangeException if the task number is outside the task list
@@ -661,9 +709,7 @@ public class TaskList {
         }
     }
 
-    /**
-     * Prints success message after successful adding of Todo/Event/Deadline
-     */
+    /** Prints the latest task and count after a successful add command. */
     public void printSuccessMessage() {
         //print result
         System.out.println(c.ADD_SUCCESS_STRING);

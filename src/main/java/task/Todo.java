@@ -1,15 +1,17 @@
 package task;
 
+/** Represents a task without a date.
+ */
 public class Todo extends Task {
-    /**
-     * Init method
+    /** Creates a todo with the supplied description.
+     * @param description text entered by the user
      */
     public Todo(String description) {
         super(description);
     }
 
-    /**
-     * Overridden method to identify which class a certain object is.
+    /** Returns the todo identifier used in task display.
+     * @return {@code 'T'}
      */
     public char getIdentifier() {
         return 'T';

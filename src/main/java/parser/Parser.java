@@ -4,16 +4,20 @@ import constants.Constants;
 
 import java.util.Scanner;
 
+/** Reads commands from standard input for {@code AbstractFella}. */
 public class Parser {
     private final Constants c;
 
+    /** Creates a parser that uses the supplied input prompt.
+     * @param c constants containing the input marker
+     */
     public Parser(Constants c) {
         this.c = c;
     }
 
 
-    /**
-     * Receives user commands and executes corresponding actions.
+    /** Reads and returns one command; {@code AbstractFella.run()} calls this method.
+     * @return the next line entered by the user
      */
     public String getInput() {
         String input;

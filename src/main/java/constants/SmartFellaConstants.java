@@ -1,7 +1,9 @@
 package constants;
 
+/** Provides the SmartFella-specific messages used by {@code AbstractFella}. */
 public final class SmartFellaConstants extends Constants {
 
+    /** Creates the SmartFella message and artwork set. */
     public SmartFellaConstants() {
         FELLA_STRING = "                    ...                                                 \n"+
             "               .:------:                         -----:.                \n"+
