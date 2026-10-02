@@ -332,6 +332,8 @@ public class TaskList {
         tasks.add(tempTask);
         taskListSize++;
 
+        printSuccessMessage();
+
         return tempTask;
     }
 
@@ -398,6 +400,8 @@ public class TaskList {
         Task tempTask =  new Deadline(text, deadline);
         tasks.add(tempTask);
         taskListSize++;
+
+        printSuccessMessage();
 
         return tempTask;
     }
@@ -489,6 +493,8 @@ public class TaskList {
         Task tempTask =  new Event(text, from, to);
         tasks.add(tempTask);
         taskListSize++;
+
+        printSuccessMessage();
 
         return tempTask;
     }
