@@ -19,11 +19,12 @@ import constants.Constants;
 public class TaskList {
     ArrayList<Task> tasks;
     int taskListSize;
+    private final Constants c;
 
-
-    public TaskList() {
+    public TaskList(Constants constants) {
         this.tasks = new ArrayList<>();
         this.taskListSize = 0;
+        this.c = constants;
     }
 
     // ============================================== SIZE ============================================================
@@ -53,6 +54,10 @@ public class TaskList {
     }
 
     // ============================================== ADD/VALIDATE ITEMS ============================================================
+    public void addTaskObject(Task newTask) {
+        tasks.add(newTask);
+        taskListSize++;
+    }
     /**
      * Add Todo item into list
      * @param input
@@ -63,15 +68,15 @@ public class TaskList {
         try {
             isValidTodo(input);
         } catch (IncorrectArgumentFormatException e) {
-            System.out.println(Constants.TODO_FORMAT_ERROR_STRING);
+            System.out.println(c.TODO_FORMAT_ERROR_STRING);
             return null;
         } catch (EmptyArgumentException e) {
-            System.out.println(Constants.TODO_EMPTY_ERROR_STRING);
+            System.out.println(c.TODO_EMPTY_ERROR_STRING);
             return null;
         }
 
         //add todo
-        description = input.substring(Constants.TODO_KEYWORD.length())
+        description = input.substring(c.TODO_KEYWORD.length())
                             .strip();
 
         Task tempTask =  new Todo(description);
@@ -91,17 +96,17 @@ public class TaskList {
             throws IncorrectArgumentFormatException, EmptyArgumentException {
         //check that TODO_KEYWORD is proceeded by a space
         //and that there exists content after the space
-        boolean hasLength = (input.length() > Constants.TODO_KEYWORD.length()+1);
+        boolean hasLength = (input.length() > c.TODO_KEYWORD.length()+1);
         if (!hasLength) {
             throw new EmptyArgumentException();
         }
 
-        boolean hasSpace = (input.charAt(Constants.TODO_KEYWORD.length())==' ');
+        boolean hasSpace = (input.charAt(c.TODO_KEYWORD.length())==' ');
         if (!hasSpace) {
             throw new IncorrectArgumentFormatException();
         }
 
-        if (input.substring(Constants.TODO_KEYWORD.length()).strip().isEmpty()) {
+        if (input.substring(c.TODO_KEYWORD.length()).strip().isEmpty()) {
             throw new EmptyArgumentException();
         }
     }
@@ -117,20 +122,20 @@ public class TaskList {
         try {
             isValidDeadline(input);
         } catch (IncorrectArgumentFormatException e) {
-            System.out.println(Constants.DEADLINE_FORMAT_ERROR_STRING);
+            System.out.println(c.DEADLINE_FORMAT_ERROR_STRING);
             return null;
         } catch (IncorrectArgumentCountException e) {
-            System.out.println(Constants.DEADLINE_COUNT_ERROR_STRING);
+            System.out.println(c.DEADLINE_COUNT_ERROR_STRING);
             return null;
         } catch (EmptyArgumentException e) {
-            System.out.println(Constants.DEADLINE_EMPTY_ERROR_STRING);
+            System.out.println(c.DEADLINE_EMPTY_ERROR_STRING);
             return null;
         }
 
         //add
-        description = input.substring(Constants.DEADLINE_KEYWORD.length())
+        description = input.substring(c.DEADLINE_KEYWORD.length())
                             .strip()
-                            .split(Constants.DEADLINE_DELIM, -1);
+                            .split(c.DEADLINE_DELIM, -1);
         text = description[0].strip();
         deadline = description[1].strip();
 
@@ -152,12 +157,12 @@ public class TaskList {
             IncorrectArgumentCountException, EmptyArgumentException {
         //check that DEADLINE_KEYWORD is proceeded by a space
         //and that there exists content after the space
-        boolean hasLength = (input.length() > Constants.DEADLINE_KEYWORD.length()+1);
+        boolean hasLength = (input.length() > c.DEADLINE_KEYWORD.length()+1);
         if (!hasLength) {
             throw new EmptyArgumentException();
         }
 
-        boolean hasSpace = (input.charAt(Constants.DEADLINE_KEYWORD.length())==' ');
+        boolean hasSpace = (input.charAt(c.DEADLINE_KEYWORD.length())==' ');
         if (!hasSpace) {
             throw new IncorrectArgumentFormatException();
         }
@@ -165,9 +170,9 @@ public class TaskList {
         //check that DEADLINE_DELIM exists and that after splitting all substrings are non-empty
         String[] description;
 
-        description = input.substring(Constants.DEADLINE_KEYWORD.length())
+        description = input.substring(c.DEADLINE_KEYWORD.length())
                             .strip()
-                            .split(Constants.DEADLINE_DELIM, -1);
+                            .split(c.DEADLINE_DELIM, -1);
 
         if (description.length != 2) {
             throw new IncorrectArgumentCountException();
@@ -190,21 +195,21 @@ public class TaskList {
         try {
             isValidEvent(input);
         } catch (IncorrectArgumentFormatException e) {
-            System.out.println(Constants.EVENT_FORMAT_ERROR_STRING);
+            System.out.println(c.EVENT_FORMAT_ERROR_STRING);
             // TODO: for all of these, maybe do throw error instead, abstractfella will catch the error
             return null;
         } catch (IncorrectArgumentCountException e) {
-            System.out.println(Constants.EVENT_COUNT_ERROR_STRING);
+            System.out.println(c.EVENT_COUNT_ERROR_STRING);
             return null;
         } catch (EmptyArgumentException e) {
-            System.out.println(Constants.EVENT_EMPTY_ERROR_STRING);
+            System.out.println(c.EVENT_EMPTY_ERROR_STRING);
             return null;
         }
 
         //add
-        description = input.substring(Constants.EVENT_KEYWORD.length())
+        description = input.substring(c.EVENT_KEYWORD.length())
                             .strip()
-                            .split(Constants.EVENT_START_DELIM + "|" + Constants.EVENT_END_DELIM, -1);
+                            .split(c.EVENT_START_DELIM + "|" + c.EVENT_END_DELIM, -1);
 
         text = description[0].strip();
         from = description[1].strip();
@@ -229,20 +234,20 @@ public class TaskList {
             IncorrectArgumentCountException, EmptyArgumentException {
         //check that EVENT_KEYWORD is proceeded by a space
         //and that there exists content after the space
-        boolean hasLength = (input.length() > Constants.EVENT_KEYWORD.length()+1);
+        boolean hasLength = (input.length() > c.EVENT_KEYWORD.length()+1);
         if (!hasLength) {
             throw new EmptyArgumentException();
         }
 
-        boolean hasSpace = (input.charAt(Constants.EVENT_KEYWORD.length())==' ');
+        boolean hasSpace = (input.charAt(c.EVENT_KEYWORD.length())==' ');
         if (!hasSpace) {
             throw new IncorrectArgumentFormatException();
         }
 
         String[] description;
-        description = input.substring(Constants.EVENT_KEYWORD.length())
+        description = input.substring(c.EVENT_KEYWORD.length())
                             .strip()
-                            .split(Constants.EVENT_START_DELIM + "|" + Constants.EVENT_END_DELIM, -1);
+                            .split(c.EVENT_START_DELIM + "|" + c.EVENT_END_DELIM, -1);
 
         if (description.length != 3) {
             throw new IncorrectArgumentCountException();
@@ -263,19 +268,19 @@ public class TaskList {
         try {
             isValidMarkDone(cmd);
         } catch (TooFewArgumentsException e) {
-            System.out.println(Constants.MISSING_TASK_NUMBER_STRING);
+            System.out.println(c.MISSING_TASK_NUMBER_STRING);
             return;
         } catch (NumberFormatException e) {
-            System.out.println(Constants.INVALID_NUMBER_STRING);
+            System.out.println(c.INVALID_NUMBER_STRING);
             return;
         } catch (InvalidRangeException e) {
-            System.out.println(Constants.INVALID_VALUE_STRING);
+            System.out.println(c.INVALID_VALUE_STRING);
             return;
         } catch (TaskAlreadyMarkedException e) {
-            System.out.println(Constants.ALREADY_MARKED_STRING);
+            System.out.println(c.ALREADY_MARKED_STRING);
             return;
         } catch (TaskAlreadyUnmarkedException e) {
-            System.out.println(Constants.ALREADY_UNMARKED_STRING);
+            System.out.println(c.ALREADY_UNMARKED_STRING);
             return;
         }
 
@@ -283,13 +288,13 @@ public class TaskList {
         int index = Integer.parseInt(data[1]) - 1;
         
         //match with keyword & make change
-        if (data[0].startsWith(Constants.MARK_KEYWORD)) {
-            System.out.println(Constants.MARKED_SUCCESS_STRING
+        if (data[0].startsWith(c.MARK_KEYWORD)) {
+            System.out.println(c.MARKED_SUCCESS_STRING
                 + Integer.toString(index + 1)
                 + "! ! !\n");
             tasks.get(index).markDone();
         } else {
-            System.out.println(Constants.UNMARKED_SUCCESS_STRING
+            System.out.println(c.UNMARKED_SUCCESS_STRING
                 + Integer.toString(index + 1)
                 + "! ! !\n");
             tasks.get(index).unmarkDone();
@@ -327,11 +332,11 @@ public class TaskList {
             throw new InvalidRangeException();
         }
 
-        if (data[0].startsWith(Constants.MARK_KEYWORD) && tasks.get(index).isDone()) {
+        if (data[0].startsWith(c.MARK_KEYWORD) && tasks.get(index).isDone()) {
             throw new TaskAlreadyMarkedException();
         }
 
-        if (data[0].startsWith(Constants.UNMARK_KEYWORD) && !tasks.get(index).isDone()) {
+        if (data[0].startsWith(c.UNMARK_KEYWORD) && !tasks.get(index).isDone()) {
             throw new TaskAlreadyUnmarkedException();
         }
     }
@@ -340,13 +345,13 @@ public class TaskList {
         try {
             isValidDelete(cmd);
         } catch (TooFewArgumentsException e) {
-            System.out.println(Constants.MISSING_TASK_NUMBER_STRING);
+            System.out.println(c.MISSING_TASK_NUMBER_STRING);
             return false;
         } catch (NumberFormatException e) {
-            System.out.println(Constants.INVALID_NUMBER_STRING);
+            System.out.println(c.INVALID_NUMBER_STRING);
             return false;
         } catch (InvalidRangeException e) {
-            System.out.println(Constants.INVALID_VALUE_STRING);
+            System.out.println(c.INVALID_VALUE_STRING);
             return false;
         }
 
@@ -354,8 +359,8 @@ public class TaskList {
         int index = Integer.parseInt(data[1]) - 1;
         
         //match with keyword & make change
-        if (data[0].startsWith(Constants.DELETE_KEYWORD)) {
-            System.out.println(Constants.DELETED_SUCCESS_STRING
+        if (data[0].startsWith(c.DELETE_KEYWORD)) {
+            System.out.println(c.DELETED_SUCCESS_STRING
                 + Integer.toString(index + 1)
                 + "! ! !\n");
             tasks.remove(index);
