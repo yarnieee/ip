@@ -238,8 +238,10 @@ public class TaskList {
             return null;
         }
 
-        from = description[1].strip();
-        to = description[2].strip();
+        if (!from.isBefore(to)) {
+            System.out.println(c.EVENT_ORDER_ERROR_STRING);
+            return null;
+        }
 
         
         Task tempTask =  new Event(text, from, to);
