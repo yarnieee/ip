@@ -6,7 +6,9 @@ import parser.Parser;
 import tasklist.TaskList;
 import constants.Constants;
 
-/** Runs the task manager and delegates commands to its parser, task list, and storage. */
+/** Runs the task manager and delegates commands to its parser, task list, and storage.
+ * @param <C> constants type used by the selected personality
+ */
 public abstract class AbstractFella<C extends Constants> {
     // ============================================== VARIABLES ============================================================
     /**
@@ -18,6 +20,7 @@ public abstract class AbstractFella<C extends Constants> {
      * Tracking variables
      */
     static boolean isRunning;
+    /** Constants used for commands and user-facing messages. */
     protected C c;
     private TaskList tasks;
     private Storage storage;

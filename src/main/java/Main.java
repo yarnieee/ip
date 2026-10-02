@@ -9,6 +9,10 @@ public class Main {
     /** Stores the randomly selected application personality. */
     private static AbstractFella<?> fella;
 
+    /** Prevents construction of this entry-point utility class. */
+    private Main() {
+    }
+
     /** Creates either a {@link SmartFella} or {@link FartSmella} instance. */
     private static void instantiateFella() {
         int whichFella = new Random().nextInt(2);
