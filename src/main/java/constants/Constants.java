@@ -56,4 +56,6 @@ public class Constants {
     public String EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
     public String EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT START TIME MUST BE EARLIER THAN END TIME ! ! !\n";
     public String LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHERE ARE NO TASKS IN THE LIST ! ! !\n";
+    public String LIST_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
+            + "lIST OPTIONS MUST BE /sort name asc, /sort name desc, OR /sort date desc ! ! !\n";
 }

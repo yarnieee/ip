@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,21 +52,76 @@ public class TaskList {
      * Prints a list of all previous non-keyword commands, which have been saved as part of the To-do list.
      */
     public void getList() {
+        getList(c.LIST_KEYWORD);
+    }
+
+    /**
+     * Prints tasks according to an optional sorting request.
+     *
+     * @param input the complete list command
+     */
+    public void getList(String input) {
         if (taskListSize == 0) {
             System.out.println(c.LIST_EMPTY_ERROR_STRING);
             return;
         }
 
-        int listCounter;
+        String[] arguments = input.strip().split("\\s+");
+        if (!isValidListSort(arguments)) {
+            System.out.println(c.LIST_FORMAT_ERROR_STRING);
+            return;
+        }
 
-        for (int i = 0; i < taskListSize; i++) {
-            listCounter = i + 1;
+        List<Task> tasksToPrint = new ArrayList<>(tasks);
+        if (arguments.length > 1) {
+            Comparator<Task> comparator = getListComparator(arguments[2], arguments[3]);
+            tasksToPrint.sort(comparator);
+        }
 
-            System.out.println(String.format("%d. %s", 
-                listCounter,
-                tasks.get(i).toString()));
+        for (int i = 0; i < tasksToPrint.size(); i++) {
+            System.out.println(String.format("%d. %s",
+                i + 1,
+                tasksToPrint.get(i).toString()));
         }
         System.out.println("");
+    }
+
+    private boolean isValidListSort(String[] arguments) {
+        if (arguments.length == 1) {
+            return true;
+        }
+
+        if (arguments.length != 4 || !arguments[1].equals("/sort")) {
+            return false;
+        }
+
+        boolean validField = arguments[2].equals("name") || arguments[2].equals("date");
+        boolean validDirection = arguments[3].equals("asc") || arguments[3].equals("desc");
+        return validField && validDirection
+                && (!arguments[2].equals("date") || arguments[3].equals("desc"));
+    }
+
+    private Comparator<Task> getListComparator(String field, String direction) {
+        Comparator<Task> comparator;
+        if (field.equals("name")) {
+            comparator = Comparator.comparing(Task::getName, String.CASE_INSENSITIVE_ORDER);
+        } else {
+            comparator = Comparator.comparing(this::getTaskDate,
+                    Comparator.nullsLast(Comparator.naturalOrder()));
+            return comparator;
+        }
+
+        return direction.equals("desc") ? comparator.reversed() : comparator;
+    }
+
+    private LocalDateTime getTaskDate(Task task) {
+        if (task instanceof Deadline deadline) {
+            return deadline.getDeadline();
+        }
+        if (task instanceof Event event) {
+            return event.getFrom();
+        }
+        return null;
     }
 
     // ============================================== ADD/VALIDATE ITEMS ============================================================
