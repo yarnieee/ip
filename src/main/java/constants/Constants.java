@@ -115,6 +115,12 @@ public class Constants {
     public String EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
     /** Message for an event whose start is not earlier than its end. */
     public String EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT START TIME MUST BE EARLIER THAN END TIME ! ! !\n";
+    /** Message for a date that does not follow the supported format. */
+    public String DATE_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
+            + "dATES MUST USE DD-MM-YY OR DD-MM-YYYY, WITH OPTIONAL HHMM ! ! !\n";
+    /** Message for a date whose day, month, or time is outside its valid range. */
+    public String DATE_OUT_OF_RANGE_ERROR_STRING = FELLA_TEXT_MARKER
+            + "dATE OR TIME IS OUT OF RANGE ! ! !\n";
     /** Message for listing an empty task list. */
     public String LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHERE ARE NO TASKS IN THE LIST ! ! !\n";
     /** Message for invalid list sorting or filtering options. */

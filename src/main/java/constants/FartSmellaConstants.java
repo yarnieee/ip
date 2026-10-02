@@ -31,6 +31,10 @@ public class FartSmellaConstants extends Constants {
         EVENT_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt nEeDs A dEsCrIpTiOn, OnE /fRoM, AnD oNe /tO ! ! !\n";
         EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt dEsCrIpTiOn, StArT, AnD eNd CaNnOt Be EmPtY ! ! !\n";
         EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt sTaRt TiMe MuSt Be EaRlIeR tHaN eNd TiMe ! ! !\n";
+        DATE_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
+                + "dAtEs MuSt UsE DD-MM-YY oR DD-MM-YYYY, WiTh OpTiOnAl HHMM ! ! !\n";
+        DATE_OUT_OF_RANGE_ERROR_STRING = FELLA_TEXT_MARKER
+                + "dAtE oR tImE iS oUt Of RaNgE ! ! !\n";
         LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHeRe ArE nO tAsKs In ThE lIsT ! ! !\n";
         LIST_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
                 + "lIsT oPtIoNs MuSt UsE /sOrT nAmE/dAtE aSc/dEsC AnD /fIlTeR tOdO/dEaDlInE/eVeNt/dOnE/nOtDoNe ! ! !\n";

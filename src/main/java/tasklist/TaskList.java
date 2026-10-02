@@ -29,7 +29,7 @@ import constants.Constants;
 public class TaskList {
     /** Recognises the accepted user date formats. */
     private static final Pattern DATE_PATTERN = Pattern.compile(
-            "^(\\d{2})-(\\d{2})(?:-(\\d{2}))?(?:\\s+(\\d{4}))?$");
+            "^(\\d{2})-(\\d{2})(?:-(\\d{2}|\\d{4}))?(?:\\s+(\\d{4}))?$");
 
     /** Tasks in their current insertion order. */
     ArrayList<Task> tasks;
@@ -393,7 +393,10 @@ public class TaskList {
         try {
             deadline = parseDateTime(description[1].strip());
         } catch (IncorrectArgumentFormatException e) {
-            System.out.println(c.DEADLINE_FORMAT_ERROR_STRING);
+            System.out.println(c.DATE_FORMAT_ERROR_STRING);
+            return null;
+        } catch (DateTimeException e) {
+            System.out.println(c.DATE_OUT_OF_RANGE_ERROR_STRING);
             return null;
         }
 
@@ -444,7 +447,6 @@ public class TaskList {
             throw new EmptyArgumentException();
         }
 
-        parseDateTime(description[1].strip());
     }
 
     /** Adds an event when its description, dates, and date order are valid.
@@ -480,7 +482,10 @@ public class TaskList {
             from = parseDateTime(description[1].strip());
             to = parseDateTime(description[2].strip());
         } catch (IncorrectArgumentFormatException e) {
-            System.out.println(c.EVENT_FORMAT_ERROR_STRING);
+            System.out.println(c.DATE_FORMAT_ERROR_STRING);
+            return null;
+        } catch (DateTimeException e) {
+            System.out.println(c.DATE_OUT_OF_RANGE_ERROR_STRING);
             return null;
         }
 
@@ -536,8 +541,6 @@ public class TaskList {
             throw new EmptyArgumentException();
         }
 
-        parseDateTime(description[1].strip());
-        parseDateTime(description[2].strip());
     }
 
     /**
@@ -556,19 +559,18 @@ public class TaskList {
 
         int day = Integer.parseInt(matcher.group(1));
         int month = Integer.parseInt(matcher.group(2));
-        int year = matcher.group(3) == null
+        String yearInput = matcher.group(3);
+        int year = yearInput == null
                 ? LocalDate.now().getYear()
-                : 2000 + Integer.parseInt(matcher.group(3));
+                : yearInput.length() == 2
+                    ? 2000 + Integer.parseInt(yearInput)
+                    : Integer.parseInt(yearInput);
         int time = matcher.group(4) == null ? 0 : Integer.parseInt(matcher.group(4));
         int hour = time / 100;
         int minute = time % 100;
 
-        try {
-            return LocalDateTime.of(YearMonth.of(year, month).atDay(day),
-                    java.time.LocalTime.of(hour, minute));
-        } catch (DateTimeException e) {
-            throw new IncorrectArgumentFormatException();
-        }
+        return LocalDateTime.of(YearMonth.of(year, month).atDay(day),
+                java.time.LocalTime.of(hour, minute));
     }
 
     /** Marks or unmarks the indexed task according to the command.
