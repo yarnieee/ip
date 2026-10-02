@@ -2,11 +2,10 @@ package constants;
 
 /** Provides shared keywords, task markers, and user-facing messages. */
 public class Constants {
-
     /** Creates the default English message set. */
     public Constants() {
     }
-    
+
     // ======================= CONSTANTS =============================
     /** Prompt printed before reading a command. */
     public String INPUT_MARKER_STRING = ">>> ";
