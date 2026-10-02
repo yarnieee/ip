@@ -118,7 +118,10 @@ public class TaskList {
             return;
         }
 
-        List<Task> tasksToPrint = new ArrayList<>(tasks);
+        List<Integer> taskIndicesToPrint = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            taskIndicesToPrint.add(i);
+        }
         String sortField = null;
         String sortDirection = null;
         List<String> filters = new ArrayList<>();
@@ -138,8 +141,8 @@ public class TaskList {
         }
 
         if (!filters.isEmpty()) {
-            tasksToPrint.removeIf(task -> !matchesFilters(task, filters));
-            if (tasksToPrint.isEmpty()) {
+            taskIndicesToPrint.removeIf(index -> !matchesFilters(tasks.get(index), filters));
+            if (taskIndicesToPrint.isEmpty()) {
                 System.out.println(c.LIST_NO_MATCHING_TASKS_ERROR_STRING);
                 return;
             }
@@ -147,13 +150,14 @@ public class TaskList {
 
         if (sortField != null) {
             Comparator<Task> comparator = getListComparator(sortField, sortDirection);
-            tasksToPrint.sort(comparator);
+            taskIndicesToPrint.sort((firstIndex, secondIndex) ->
+                    comparator.compare(tasks.get(firstIndex), tasks.get(secondIndex)));
         }
 
-        for (int i = 0; i < tasksToPrint.size(); i++) {
+        for (int index : taskIndicesToPrint) {
             System.out.println(String.format("%d. %s",
-                i + 1,
-                tasksToPrint.get(i).toString()));
+                index + 1,
+                tasks.get(index).toString()));
         }
         System.out.println("");
     }
