@@ -32,4 +32,4 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
-Do not commit or push unless explicitly asked.
+Do not commit or push unless explicitly asked. If commit is requested, split commits into multiple commits if necessary, having a distinct objective for each commit.

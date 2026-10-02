@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,19 +50,216 @@ public class TaskList {
     }
 
     /**
+     * Prints every task whose description contains the supplied search term.
+     * Search is case-insensitive and preserves the task list order.
+     *
+     * @param input the complete find command
+     */
+    public void find(String input) {
+        String searchTerm = input.substring(c.FIND_KEYWORD.length()).strip();
+        if (searchTerm.isEmpty()) {
+            System.out.println(c.FIND_EMPTY_ERROR_STRING);
+            return;
+        }
+
+        String searchTermLowerCase = searchTerm.toLowerCase(Locale.ROOT);
+        boolean foundMatch = false;
+        for (int i = 0; i < taskListSize; i++) {
+            Task task = tasks.get(i);
+            if (task.getName().toLowerCase(Locale.ROOT).contains(searchTermLowerCase)) {
+                System.out.println(String.format("%d. %s", i + 1, task));
+                foundMatch = true;
+            }
+        }
+
+        if (!foundMatch) {
+            System.out.println(c.FIND_NO_MATCHING_TASKS_ERROR_STRING);
+            return;
+        }
+        System.out.println("");
+    }
+
+    /**
      * Prints a list of all previous non-keyword commands, which have been saved as part of the To-do list.
      */
     public void getList() {
-        int listCounter;
+        getList(c.LIST_KEYWORD);
+    }
 
-        for (int i = 0; i < taskListSize; i++) {
-            listCounter = i + 1;
+    /**
+     * Prints tasks according to an optional sorting request.
+     *
+     * @param input the complete list command
+     */
+    public void getList(String input) {
+        if (taskListSize == 0) {
+            System.out.println(c.LIST_EMPTY_ERROR_STRING);
+            return;
+        }
 
-            System.out.println(String.format("%d. %s", 
-                listCounter,
-                tasks.get(i).toString()));
+        String[] arguments = input.strip().split("\\s+");
+        if (!isValidListOptions(arguments)) {
+            System.out.println(c.LIST_FORMAT_ERROR_STRING);
+            return;
+        }
+
+        List<Task> tasksToPrint = new ArrayList<>(tasks);
+        String sortField = null;
+        String sortDirection = null;
+        List<String> filters = new ArrayList<>();
+        for (int i = 1; i < arguments.length;) {
+            if (arguments[i].equals(c.LIST_SORT_DELIM)) {
+                sortField = arguments[i + 1];
+                sortDirection = arguments[i + 2];
+                i += 3;
+            } else {
+                i += 1;
+                while (i < arguments.length && !arguments[i].equals(c.LIST_SORT_DELIM)
+                        && !arguments[i].equals(c.LIST_FILTER_DELIM)) {
+                    filters.add(arguments[i]);
+                    i += 1;
+                }
+            }
+        }
+
+        if (!filters.isEmpty()) {
+            tasksToPrint.removeIf(task -> !matchesFilters(task, filters));
+            if (tasksToPrint.isEmpty()) {
+                System.out.println(c.LIST_NO_MATCHING_TASKS_ERROR_STRING);
+                return;
+            }
+        }
+
+        if (sortField != null) {
+            Comparator<Task> comparator = getListComparator(sortField, sortDirection);
+            tasksToPrint.sort(comparator);
+        }
+
+        for (int i = 0; i < tasksToPrint.size(); i++) {
+            System.out.println(String.format("%d. %s",
+                i + 1,
+                tasksToPrint.get(i).toString()));
         }
         System.out.println("");
+    }
+
+    private boolean isValidListOptions(String[] arguments) {
+        if (arguments.length == 1) {
+            return true;
+        }
+
+        boolean hasSort = false;
+        boolean hasFilter = false;
+        for (int i = 1; i < arguments.length;) {
+            if (arguments[i].equals(c.LIST_SORT_DELIM)) {
+                if (hasSort || i + 2 >= arguments.length) {
+                    return false;
+                }
+                String field = arguments[i + 1];
+                String direction = arguments[i + 2];
+                boolean validField = field.equals(c.LIST_NAME_FIELD)
+                        || field.equals(c.LIST_DATE_FIELD);
+                boolean validDirection = direction.equals(c.LIST_ASCENDING)
+                        || direction.equals(c.LIST_DESCENDING);
+                if (!validField || !validDirection) {
+                    return false;
+                }
+                hasSort = true;
+                i += 3;
+            } else if (arguments[i].equals(c.LIST_FILTER_DELIM)) {
+                if (hasFilter || i + 1 >= arguments.length) {
+                    return false;
+                }
+                hasFilter = true;
+                boolean hasFilterValue = false;
+                i += 1;
+                while (i < arguments.length && !arguments[i].equals(c.LIST_SORT_DELIM)
+                        && !arguments[i].equals(c.LIST_FILTER_DELIM)) {
+                    if (!isValidListFilter(arguments[i])) {
+                        return false;
+                    }
+                    hasFilterValue = true;
+                    i += 1;
+                }
+                if (!hasFilterValue) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isValidListFilter(String filter) {
+        return filter.equals(c.TODO_KEYWORD) || filter.equals(c.DEADLINE_KEYWORD)
+                || filter.equals(c.EVENT_KEYWORD) || filter.equals(c.LIST_DONE_FILTER)
+                || filter.equals(c.LIST_NOT_DONE_FILTER);
+    }
+
+    private boolean matchesFilters(Task task, List<String> filters) {
+        boolean hasTypeFilter = false;
+        boolean matchesType = false;
+        boolean hasStatusFilter = false;
+        boolean matchesStatus = false;
+
+        for (String filter : filters) {
+            if (filter.equals(c.TODO_KEYWORD)) {
+                hasTypeFilter = true;
+                matchesType |= task.getIdentifier() == 'T';
+            } else if (filter.equals(c.DEADLINE_KEYWORD)) {
+                hasTypeFilter = true;
+                matchesType |= task instanceof Deadline;
+            } else if (filter.equals(c.EVENT_KEYWORD)) {
+                hasTypeFilter = true;
+                matchesType |= task instanceof Event;
+            } else if (filter.equals(c.LIST_DONE_FILTER)) {
+                hasStatusFilter = true;
+                matchesStatus |= task.isDone();
+            } else if (filter.equals(c.LIST_NOT_DONE_FILTER)) {
+                hasStatusFilter = true;
+                matchesStatus |= !task.isDone();
+            }
+        }
+
+        return (!hasTypeFilter || matchesType) && (!hasStatusFilter || matchesStatus);
+    }
+
+    private Comparator<Task> getListComparator(String field, String direction) {
+        Comparator<Task> comparator;
+        if (field.equals(c.LIST_NAME_FIELD)) {
+            comparator = Comparator.comparing(Task::getName, String.CASE_INSENSITIVE_ORDER);
+        } else {
+            comparator = (first, second) -> {
+                LocalDateTime firstDate = getTaskDate(first);
+                LocalDateTime secondDate = getTaskDate(second);
+                if (firstDate == null && secondDate == null) {
+                    return 0;
+                }
+                if (firstDate == null) {
+                    return 1;
+                }
+                if (secondDate == null) {
+                    return -1;
+                }
+                return direction.equals(c.LIST_DESCENDING)
+                        ? secondDate.compareTo(firstDate)
+                        : firstDate.compareTo(secondDate);
+            };
+            return comparator;
+        }
+
+        return direction.equals(c.LIST_DESCENDING) ? comparator.reversed() : comparator;
+    }
+
+    private LocalDateTime getTaskDate(Task task) {
+        if (task instanceof Deadline deadline) {
+            return deadline.getDeadline();
+        }
+        if (task instanceof Event event) {
+            return event.getFrom();
+        }
+        return null;
     }
 
     // ============================================== ADD/VALIDATE ITEMS ============================================================
@@ -459,6 +659,17 @@ public class TaskList {
                 || index < 0) {
             throw new InvalidRangeException();
         }
+    }
+
+    /**
+     * Prints success message after successful adding of Todo/Event/Deadline
+     */
+    public void printSuccessMessage() {
+        //print result
+        System.out.println(c.ADD_SUCCESS_STRING);
+        System.out.println("" + getTask(getSize()-1).toString());
+        System.out.println(c.TASK_COUNT_STRING1 + getSize() + c.TASK_COUNT_STRING2);
+        System.out.println();
     }
 
     

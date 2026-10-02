@@ -12,6 +12,7 @@ public class Constants {
     public String MARK_KEYWORD = "mark";
     public String UNMARK_KEYWORD = "unmark";
     public String DELETE_KEYWORD = "delete";
+    public String FIND_KEYWORD = "find";
 
     public String TODO_KEYWORD = "todo";
     public String DEADLINE_KEYWORD = "deadline";
@@ -19,6 +20,14 @@ public class Constants {
     public String DEADLINE_DELIM = "/by";
     public String EVENT_START_DELIM = "/from";
     public String EVENT_END_DELIM = "/to";
+    public String LIST_SORT_DELIM = "/sort";
+    public String LIST_FILTER_DELIM = "/filter";
+    public String LIST_NAME_FIELD = "name";
+    public String LIST_DATE_FIELD = "date";
+    public String LIST_ASCENDING = "asc";
+    public String LIST_DESCENDING = "desc";
+    public String LIST_DONE_FILTER = "done";
+    public String LIST_NOT_DONE_FILTER = "notdone";
     
     public String TODO_CHAR = "T"; //slightly misleading given that it is a string not a char
     public String DEADLINE_CHAR = "D";
@@ -55,4 +64,13 @@ public class Constants {
     public String EVENT_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT NEEDS A DESCRIPTION, ONE /from, AND ONE /to ! ! !\n";
     public String EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT DESCRIPTION, START, AND END CANNOT BE EMPTY ! ! !\n";
     public String EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT START TIME MUST BE EARLIER THAN END TIME ! ! !\n";
+    public String LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHERE ARE NO TASKS IN THE LIST ! ! !\n";
+    public String LIST_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
+            + "lIST OPTIONS MUST USE /sort name/date asc/desc AND /filter todo/deadline/event/done/notdone ! ! !\n";
+    public String LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
+            + "nO TASKS MATCH THE SELECTED FILTER ! ! !\n";
+    public String FIND_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER
+            + "fIND NEEDS A SEARCH TERM ! ! !\n";
+    public String FIND_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
+            + "nO TASKS CONTAIN THAT SEARCH TERM ! ! !\n";
 }
