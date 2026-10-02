@@ -2,44 +2,45 @@ package task;
 
 import java.time.LocalDateTime;
 
+/** Represents a todo with a required deadline. */
 public class Deadline extends Todo {
+    /** Date and time by which the task should be completed. */
     private LocalDateTime deadline;
 
-    /**
-     * Init method
-     * @param description
-     * @param deadline
+    /** Creates a deadline task.
+     * @param description task description
+     * @param deadline date and time stored for the deadline
      */
     public Deadline(String description, LocalDateTime deadline) {
         super(description);
         this.deadline = deadline;
     }
 
-    /**
-     * String method
-     * [D][X] this is the deadline (by: time)
-     * D to denote class Deadline
-     * X to denote task is marked done
+    /** Formats the deadline for task-list output.
+     * @return task display text with the deadline appended
      */
     public String toString() {
         super.toString();
         return super.toString() + String.format(" (by: %s)", getDeadline());
     }
 
-    /**
-     * Overridden method to identify which class a certain object is.
+    /** Returns the deadline identifier used in task display.
+     * @return {@code 'D'}
      */
     public char getIdentifier() {
         return 'D';
     }
 
-    /**
-     * Getter and setter methods
+    /** Returns the stored deadline.
+     * @return deadline date and time
      */
     public LocalDateTime getDeadline() {
         return deadline;
     }
 
+    /** Replaces the stored deadline.
+     * @param by new deadline date and time
+     */
     public void setDeadline(LocalDateTime by) {
         this.deadline = by;
     }
