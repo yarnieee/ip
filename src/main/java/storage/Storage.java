@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import constants.Constants;
@@ -17,6 +19,9 @@ import task.Todo;
 import tasklist.TaskList;
 
 public class Storage {
+
+    private static final DateTimeFormatter STORAGE_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("dd-MM-yy HHmm");
 
     private String saveFilePath;
     private final Constants c;
@@ -104,13 +109,13 @@ public class Storage {
             saveString = c.DEADLINE_CHAR
                     + "," + isDoneString
                     + "," + deadline.getName()
-                    + "," + deadline.getDeadline();
+                    + "," + STORAGE_DATE_FORMAT.format(deadline.getDeadline());
         } else if (task instanceof Event event) {
             saveString = c.EVENT_CHAR
                     + "," + isDoneString
                     + "," + event.getName()
-                    + "," + event.getFrom()
-                    + "," + event.getTo();
+                    + "," + STORAGE_DATE_FORMAT.format(event.getFrom())
+                    + "," + STORAGE_DATE_FORMAT.format(event.getTo());
         } else {
             saveString = c.TODO_CHAR
                     + "," + isDoneString
@@ -151,10 +156,12 @@ public class Storage {
         Task newTask;
 
         if (saveString.startsWith(c.DEADLINE_CHAR)){
-            newTask = new Deadline(temp[2], temp[3]);
+            newTask = new Deadline(temp[2], LocalDateTime.parse(temp[3], STORAGE_DATE_FORMAT));
 
         } else if (saveString.startsWith(c.EVENT_CHAR)){
-            newTask = new Event(temp[2], temp[3], temp[4]);
+            newTask = new Event(temp[2],
+                    LocalDateTime.parse(temp[3], STORAGE_DATE_FORMAT),
+                    LocalDateTime.parse(temp[4], STORAGE_DATE_FORMAT));
 
         } else {
             newTask = new Todo(temp[2]);

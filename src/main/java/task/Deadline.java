@@ -1,14 +1,16 @@
 package task;
 
+import java.time.LocalDateTime;
+
 public class Deadline extends Todo {
-    private String deadline;
+    private LocalDateTime deadline;
 
     /**
      * Init method
      * @param description
      * @param deadline
      */
-    public Deadline(String description, String deadline) {
+    public Deadline(String description, LocalDateTime deadline) {
         super(description);
         this.deadline = deadline;
     }
@@ -34,11 +36,11 @@ public class Deadline extends Todo {
     /**
      * Getter and setter methods
      */
-    public String getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(String by) {
+    public void setDeadline(LocalDateTime by) {
         this.deadline = by;
     }
 }

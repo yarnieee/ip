@@ -28,6 +28,7 @@ public class FartSmellaConstants extends Constants {
         EVENT_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt nEeDs A sPaCe BeFoRe ItS dEsCrIpTiOn ! ! !\n";
         EVENT_COUNT_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt nEeDs A dEsCrIpTiOn, OnE /fRoM, AnD oNe /tO ! ! !\n";
         EVENT_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt dEsCrIpTiOn, StArT, AnD eNd CaNnOt Be EmPtY ! ! !\n";
+        EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt sTaRt TiMe MuSt Be EaRlIeR tHaN eNd TiMe ! ! !\n";
 
         FELLA_STRING = "@@@@@@@@*=-=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%##*==+#######\n"+
             "@@@@@@@@@#+::-*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%###*+--+*#######\n"+

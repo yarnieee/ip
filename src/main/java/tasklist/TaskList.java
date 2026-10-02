@@ -1,6 +1,12 @@
 package tasklist;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import error.EmptyArgumentException;
 import error.IncorrectArgumentCountException;
@@ -17,6 +23,9 @@ import task.Todo;
 import constants.Constants;
 
 public class TaskList {
+    private static final Pattern DATE_PATTERN = Pattern.compile(
+            "^(\\d{2})-(\\d{2})(?:-(\\d{2}))?(?:\\s+(\\d{4}))?$");
+
     ArrayList<Task> tasks;
     int taskListSize;
     private final Constants c;
@@ -117,7 +126,8 @@ public class TaskList {
      */
     public Task addDeadline(String input) {
         String[] description;
-        String text, deadline;
+        String text;
+        LocalDateTime deadline;
 
         try {
             isValidDeadline(input);
@@ -137,7 +147,12 @@ public class TaskList {
                             .strip()
                             .split(c.DEADLINE_DELIM, -1);
         text = description[0].strip();
-        deadline = description[1].strip();
+        try {
+            deadline = parseDateTime(description[1].strip());
+        } catch (IncorrectArgumentFormatException e) {
+            System.out.println(c.DEADLINE_FORMAT_ERROR_STRING);
+            return null;
+        }
 
         Task tempTask =  new Deadline(text, deadline);
         tasks.add(tempTask);
@@ -182,6 +197,8 @@ public class TaskList {
             || description[1].strip().isEmpty()) {
             throw new EmptyArgumentException();
         }
+
+        parseDateTime(description[1].strip());
     }
 
     /**
@@ -190,7 +207,8 @@ public class TaskList {
      */
     public Task addEvent(String input) {
         String[] description;
-        String text, from, to;
+        String text;
+        LocalDateTime from, to;
 
         try {
             isValidEvent(input);
@@ -212,8 +230,18 @@ public class TaskList {
                             .split(c.EVENT_START_DELIM + "|" + c.EVENT_END_DELIM, -1);
 
         text = description[0].strip();
-        from = description[1].strip();
-        to = description[2].strip();
+        try {
+            from = parseDateTime(description[1].strip());
+            to = parseDateTime(description[2].strip());
+        } catch (IncorrectArgumentFormatException e) {
+            System.out.println(c.EVENT_FORMAT_ERROR_STRING);
+            return null;
+        }
+
+        if (!from.isBefore(to)) {
+            System.out.println(c.EVENT_ORDER_ERROR_STRING);
+            return null;
+        }
 
         
         Task tempTask =  new Event(text, from, to);
@@ -257,6 +285,40 @@ public class TaskList {
             || description[1].strip().isEmpty()
             || description[2].strip().isEmpty()) {
             throw new EmptyArgumentException();
+        }
+
+        parseDateTime(description[1].strip());
+        parseDateTime(description[2].strip());
+    }
+
+    /**
+     * Parses a date in {@code DD-MM-YY HHMM} format. The year defaults to the
+     * current year and the time defaults to midnight when omitted.
+     *
+     * @param input date supplied by the user
+     * @return the parsed date and time
+     * @throws IncorrectArgumentFormatException if the date is malformed or invalid
+     */
+    private LocalDateTime parseDateTime(String input) throws IncorrectArgumentFormatException {
+        Matcher matcher = DATE_PATTERN.matcher(input);
+        if (!matcher.matches()) {
+            throw new IncorrectArgumentFormatException();
+        }
+
+        int day = Integer.parseInt(matcher.group(1));
+        int month = Integer.parseInt(matcher.group(2));
+        int year = matcher.group(3) == null
+                ? LocalDate.now().getYear()
+                : 2000 + Integer.parseInt(matcher.group(3));
+        int time = matcher.group(4) == null ? 0 : Integer.parseInt(matcher.group(4));
+        int hour = time / 100;
+        int minute = time % 100;
+
+        try {
+            return LocalDateTime.of(YearMonth.of(year, month).atDay(day),
+                    java.time.LocalTime.of(hour, minute));
+        } catch (DateTimeException e) {
+            throw new IncorrectArgumentFormatException();
         }
     }
 
