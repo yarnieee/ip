@@ -19,6 +19,14 @@ public class Constants {
     public String DEADLINE_DELIM = "/by";
     public String EVENT_START_DELIM = "/from";
     public String EVENT_END_DELIM = "/to";
+    public String LIST_SORT_DELIM = "/sort";
+    public String LIST_FILTER_DELIM = "/filter";
+    public String LIST_NAME_FIELD = "name";
+    public String LIST_DATE_FIELD = "date";
+    public String LIST_ASCENDING = "asc";
+    public String LIST_DESCENDING = "desc";
+    public String LIST_DONE_FILTER = "done";
+    public String LIST_NOT_DONE_FILTER = "notdone";
     
     public String TODO_CHAR = "T"; //slightly misleading given that it is a string not a char
     public String DEADLINE_CHAR = "D";
@@ -57,8 +65,7 @@ public class Constants {
     public String EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVENT START TIME MUST BE EARLIER THAN END TIME ! ! !\n";
     public String LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHERE ARE NO TASKS IN THE LIST ! ! !\n";
     public String LIST_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
-            + "lIST OPTIONS MUST USE /sort name asc, /sort name desc, /sort date desc, "
-            + "OR /filter todo, deadline, event, done, NOTDONE ! ! !\n";
+            + "lIST OPTIONS MUST USE /sort name/date asc/desc AND /filter todo/deadline/event/done/notdone ! ! !\n";
     public String LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
             + "nO TASKS MATCH THE SELECTED FILTER ! ! !\n";
 }

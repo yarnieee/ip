@@ -31,8 +31,7 @@ public class FartSmellaConstants extends Constants {
         EVENT_ORDER_ERROR_STRING = FELLA_TEXT_MARKER + "eVeNt sTaRt TiMe MuSt Be EaRlIeR tHaN eNd TiMe ! ! !\n";
         LIST_EMPTY_ERROR_STRING = FELLA_TEXT_MARKER + "tHeRe ArE nO tAsKs In ThE lIsT ! ! !\n";
         LIST_FORMAT_ERROR_STRING = FELLA_TEXT_MARKER
-                + "lIsT oPtIoNs MuSt UsE /sOrT nAmE aSc, /sOrT nAmE dEsC, /sOrT dAtE dEsC, "
-                + "Or /fIlTeR tOdO, DeAdLiNe, EvEnT, DoNe, NoTdOnE ! ! !\n";
+                + "lIsT oPtIoNs MuSt UsE /sOrT nAmE/dAtE aSc/dEsC AnD /fIlTeR tOdO/dEaDlInE/eVeNt/dOnE/nOtDoNe ! ! !\n";
         LIST_NO_MATCHING_TASKS_ERROR_STRING = FELLA_TEXT_MARKER
                 + "nO tAsKs MaTcH tHe SeLeCtEd FiLtEr ! ! !\n";
 

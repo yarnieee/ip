@@ -75,21 +75,24 @@ public class TaskList {
         List<Task> tasksToPrint = new ArrayList<>(tasks);
         String sortField = null;
         String sortDirection = null;
-        String filter = null;
+        List<String> filters = new ArrayList<>();
         for (int i = 1; i < arguments.length;) {
-            if (arguments[i].equals("/sort")) {
+            if (arguments[i].equals(c.LIST_SORT_DELIM)) {
                 sortField = arguments[i + 1];
                 sortDirection = arguments[i + 2];
                 i += 3;
             } else {
-                filter = arguments[i + 1];
-                i += 2;
+                i += 1;
+                while (i < arguments.length && !arguments[i].equals(c.LIST_SORT_DELIM)
+                        && !arguments[i].equals(c.LIST_FILTER_DELIM)) {
+                    filters.add(arguments[i]);
+                    i += 1;
+                }
             }
         }
 
-        if (filter != null) {
-            String selectedFilter = filter;
-            tasksToPrint.removeIf(task -> !matchesFilter(task, selectedFilter));
+        if (!filters.isEmpty()) {
+            tasksToPrint.removeIf(task -> !matchesFilters(task, filters));
             if (tasksToPrint.isEmpty()) {
                 System.out.println(c.LIST_NO_MATCHING_TASKS_ERROR_STRING);
                 return;
@@ -117,27 +120,39 @@ public class TaskList {
         boolean hasSort = false;
         boolean hasFilter = false;
         for (int i = 1; i < arguments.length;) {
-            if (arguments[i].equals("/sort")) {
+            if (arguments[i].equals(c.LIST_SORT_DELIM)) {
                 if (hasSort || i + 2 >= arguments.length) {
                     return false;
                 }
                 String field = arguments[i + 1];
                 String direction = arguments[i + 2];
-                boolean validField = field.equals("name") || field.equals("date");
-                boolean validDirection = direction.equals("asc") || direction.equals("desc");
-                if (!validField || !validDirection
-                        || (field.equals("date") && !direction.equals("desc"))) {
+                boolean validField = field.equals(c.LIST_NAME_FIELD)
+                        || field.equals(c.LIST_DATE_FIELD);
+                boolean validDirection = direction.equals(c.LIST_ASCENDING)
+                        || direction.equals(c.LIST_DESCENDING);
+                if (!validField || !validDirection) {
                     return false;
                 }
                 hasSort = true;
                 i += 3;
-            } else if (arguments[i].equals("/filter")) {
-                if (hasFilter || i + 1 >= arguments.length
-                        || !isValidListFilter(arguments[i + 1])) {
+            } else if (arguments[i].equals(c.LIST_FILTER_DELIM)) {
+                if (hasFilter || i + 1 >= arguments.length) {
                     return false;
                 }
                 hasFilter = true;
-                i += 2;
+                boolean hasFilterValue = false;
+                i += 1;
+                while (i < arguments.length && !arguments[i].equals(c.LIST_SORT_DELIM)
+                        && !arguments[i].equals(c.LIST_FILTER_DELIM)) {
+                    if (!isValidListFilter(arguments[i])) {
+                        return false;
+                    }
+                    hasFilterValue = true;
+                    i += 1;
+                }
+                if (!hasFilterValue) {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -146,32 +161,64 @@ public class TaskList {
     }
 
     private boolean isValidListFilter(String filter) {
-        return filter.equals("todo") || filter.equals("deadline") || filter.equals("event")
-                || filter.equals("done") || filter.equals("notdone");
+        return filter.equals(c.TODO_KEYWORD) || filter.equals(c.DEADLINE_KEYWORD)
+                || filter.equals(c.EVENT_KEYWORD) || filter.equals(c.LIST_DONE_FILTER)
+                || filter.equals(c.LIST_NOT_DONE_FILTER);
     }
 
-    private boolean matchesFilter(Task task, String filter) {
-        return switch (filter) {
-        case "todo" -> task.getIdentifier() == 'T';
-        case "deadline" -> task instanceof Deadline;
-        case "event" -> task instanceof Event;
-        case "done" -> task.isDone();
-        case "notdone" -> !task.isDone();
-        default -> false;
-        };
+    private boolean matchesFilters(Task task, List<String> filters) {
+        boolean hasTypeFilter = false;
+        boolean matchesType = false;
+        boolean hasStatusFilter = false;
+        boolean matchesStatus = false;
+
+        for (String filter : filters) {
+            if (filter.equals(c.TODO_KEYWORD)) {
+                hasTypeFilter = true;
+                matchesType |= task.getIdentifier() == 'T';
+            } else if (filter.equals(c.DEADLINE_KEYWORD)) {
+                hasTypeFilter = true;
+                matchesType |= task instanceof Deadline;
+            } else if (filter.equals(c.EVENT_KEYWORD)) {
+                hasTypeFilter = true;
+                matchesType |= task instanceof Event;
+            } else if (filter.equals(c.LIST_DONE_FILTER)) {
+                hasStatusFilter = true;
+                matchesStatus |= task.isDone();
+            } else if (filter.equals(c.LIST_NOT_DONE_FILTER)) {
+                hasStatusFilter = true;
+                matchesStatus |= !task.isDone();
+            }
+        }
+
+        return (!hasTypeFilter || matchesType) && (!hasStatusFilter || matchesStatus);
     }
 
     private Comparator<Task> getListComparator(String field, String direction) {
         Comparator<Task> comparator;
-        if (field.equals("name")) {
+        if (field.equals(c.LIST_NAME_FIELD)) {
             comparator = Comparator.comparing(Task::getName, String.CASE_INSENSITIVE_ORDER);
         } else {
-            comparator = Comparator.comparing(this::getTaskDate,
-                    Comparator.nullsLast(Comparator.naturalOrder()));
+            comparator = (first, second) -> {
+                LocalDateTime firstDate = getTaskDate(first);
+                LocalDateTime secondDate = getTaskDate(second);
+                if (firstDate == null && secondDate == null) {
+                    return 0;
+                }
+                if (firstDate == null) {
+                    return 1;
+                }
+                if (secondDate == null) {
+                    return -1;
+                }
+                return direction.equals(c.LIST_DESCENDING)
+                        ? secondDate.compareTo(firstDate)
+                        : firstDate.compareTo(secondDate);
+            };
             return comparator;
         }
 
-        return direction.equals("desc") ? comparator.reversed() : comparator;
+        return direction.equals(c.LIST_DESCENDING) ? comparator.reversed() : comparator;
     }
 
     private LocalDateTime getTaskDate(Task task) {
